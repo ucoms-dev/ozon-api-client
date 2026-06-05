@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"testing"
 
-	core "github.com/benice2me11/ozon-api-client"
+	core "github.com/ucoms-dev/ozon-api-client"
 )
 
 func TestListUnprocessedShipments(t *testing.T) {
