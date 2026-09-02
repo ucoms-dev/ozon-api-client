@@ -3,7 +3,9 @@ package ozon
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	core "github.com/ucoms-dev/ozon-api-client"
@@ -267,15 +269,47 @@ type FBSPostingTarifficationStep struct {
 	TariffType       string       `json:"tariff_type"`
 }
 
-// FBSPostingV4 keeps the current cursor response contract separate from the
-// legacy offset response where tariffication used string amounts.
+// FBSPostingV4 preserves the public source contract released in v1.16.0.
 type FBSPostingV4 struct {
 	FBSPosting
+	Tariffication FBSPostingV4Tariffication `json:"tariffication"`
+}
+
+// FBSPostingV4Current contains the exact current Ozon cursor response model.
+type FBSPostingV4Current struct {
+	FBSPosting
+	AnalyticsData FBSPostingV4AnalyticsData `json:"analytics_data"`
+	Customer      FBSPostingV4Customer      `json:"customer"`
 	FinancialData FBSFinancialDataV4        `json:"financial_data"`
 	Optional      FBSPostingV4Optional      `json:"optional"`
 	Products      []FBSPostingV4Product     `json:"products"`
 	Requirements  FBSPostingV4Requirements  `json:"requirements"`
 	Tariffication FBSPostingV4Tariffication `json:"tariffication"`
+}
+
+type FBSPostingV4AnalyticsData struct {
+	City                    string               `json:"city"`
+	ClientDeliveryDateBegin time.Time            `json:"client_delivery_date_begin"`
+	ClientDeliveryDateEnd   time.Time            `json:"client_delivery_date_end"`
+	DeliveryDateBegin       time.Time            `json:"delivery_date_begin"`
+	DeliveryDateEnd         time.Time            `json:"delivery_date_end"`
+	DeliveryType            string               `json:"delivery_type"`
+	IsLegal                 bool                 `json:"is_legal"`
+	IsPremium               bool                 `json:"is_premium"`
+	PaymentTypeGroupName    PaymentTypeGroupName `json:"payment_type_group_name"`
+	Region                  string               `json:"region"`
+	TPLProvider             string               `json:"tpl_provider"`
+	TPLProviderId           int64                `json:"tpl_provider_id"`
+	Warehouse               string               `json:"warehouse"`
+	WarehouseId             int64                `json:"warehouse_id"`
+}
+
+type FBSPostingV4Customer struct {
+	Address       FBSCustomerAddress `json:"address"`
+	CustomerEmail string             `json:"customer_email"`
+	CustomerId    int64              `json:"customer_id"`
+	Name          string             `json:"name"`
+	Phone         string             `json:"phone"`
 }
 
 type FBSPostingV4Optional struct {
@@ -893,9 +927,39 @@ type GetFBSShipmentsListV4Response struct {
 	Postings []FBSPostingV4 `json:"postings"`
 }
 
-// GetFBSShipmentsListV4 returns FBS postings using cursor pagination.
+type GetFBSShipmentsListV4CurrentResponse struct {
+	core.CommonResponse
+	Cursor   string                `json:"cursor"`
+	HasNext  bool                  `json:"has_next"`
+	Postings []FBSPostingV4Current `json:"postings"`
+}
+
+// GetFBSShipmentsListV4 returns FBS postings using cursor pagination and
+// adapts the exact wire response to the source-compatible v1.16.0 model.
 func (c FBS) GetFBSShipmentsListV4(ctx context.Context, params *GetFBSShipmentsListV4Params) (*GetFBSShipmentsListV4Response, error) {
-	resp := &GetFBSShipmentsListV4Response{}
+	current, err := c.GetFBSShipmentsListV4Current(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	resp := &GetFBSShipmentsListV4Response{
+		CommonResponse: current.CommonResponse,
+		Cursor:         current.Cursor,
+		HasNext:        current.HasNext,
+		Postings:       make([]FBSPostingV4, len(current.Postings)),
+	}
+	for i, posting := range current.Postings {
+		resp.Postings[i], err = adaptFBSPostingV4(posting)
+		if err != nil {
+			return nil, fmt.Errorf("adapt posting %q: %w", posting.PostingNumber, err)
+		}
+	}
+	return resp, nil
+}
+
+// GetFBSShipmentsListV4Current returns FBS postings using the exact current
+// Ozon response contract, including money objects and string product IDs.
+func (c FBS) GetFBSShipmentsListV4Current(ctx context.Context, params *GetFBSShipmentsListV4Params) (*GetFBSShipmentsListV4CurrentResponse, error) {
+	resp := &GetFBSShipmentsListV4CurrentResponse{}
 
 	response, err := c.client.Request(ctx, http.MethodPost, "/v4/posting/fbs/list", params, resp, nil)
 	if err != nil {
@@ -942,9 +1006,41 @@ type ListUnprocessedShipmentsV4Response struct {
 	Postings []FBSPostingV4 `json:"postings"`
 }
 
-// ListUnprocessedShipmentsV4 returns unprocessed FBS postings using cursor pagination.
+type ListUnprocessedShipmentsV4CurrentResponse struct {
+	core.CommonResponse
+	Count    int64                 `json:"count"`
+	Cursor   string                `json:"cursor"`
+	HasNext  bool                  `json:"has_next"`
+	Postings []FBSPostingV4Current `json:"postings"`
+}
+
+// ListUnprocessedShipmentsV4 returns unprocessed FBS postings and adapts the
+// exact wire response to the source-compatible v1.16.0 model.
 func (c FBS) ListUnprocessedShipmentsV4(ctx context.Context, params *ListUnprocessedShipmentsV4Params) (*ListUnprocessedShipmentsV4Response, error) {
-	resp := &ListUnprocessedShipmentsV4Response{}
+	current, err := c.ListUnprocessedShipmentsV4Current(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	resp := &ListUnprocessedShipmentsV4Response{
+		CommonResponse: current.CommonResponse,
+		Count:          current.Count,
+		Cursor:         current.Cursor,
+		HasNext:        current.HasNext,
+		Postings:       make([]FBSPostingV4, len(current.Postings)),
+	}
+	for i, posting := range current.Postings {
+		resp.Postings[i], err = adaptFBSPostingV4(posting)
+		if err != nil {
+			return nil, fmt.Errorf("adapt posting %q: %w", posting.PostingNumber, err)
+		}
+	}
+	return resp, nil
+}
+
+// ListUnprocessedShipmentsV4Current returns unprocessed FBS postings using the
+// exact current Ozon response contract.
+func (c FBS) ListUnprocessedShipmentsV4Current(ctx context.Context, params *ListUnprocessedShipmentsV4Params) (*ListUnprocessedShipmentsV4CurrentResponse, error) {
+	resp := &ListUnprocessedShipmentsV4CurrentResponse{}
 
 	response, err := c.client.Request(ctx, http.MethodPost, "/v4/posting/fbs/unfulfilled/list", params, resp, nil)
 	if err != nil {
@@ -953,6 +1049,112 @@ func (c FBS) ListUnprocessedShipmentsV4(ctx context.Context, params *ListUnproce
 	response.CopyCommonResponse(&resp.CommonResponse)
 
 	return resp, nil
+}
+
+func adaptFBSPostingV4(posting FBSPostingV4Current) (FBSPostingV4, error) {
+	legacy := posting.FBSPosting
+	legacy.AnalyticsData = FBSPostingAnalyticsData{
+		City:                 posting.AnalyticsData.City,
+		DeliveryDateBegin:    posting.AnalyticsData.DeliveryDateBegin,
+		DeliveryDateEnd:      posting.AnalyticsData.DeliveryDateEnd,
+		DeliveryType:         posting.AnalyticsData.DeliveryType,
+		IsLegal:              posting.AnalyticsData.IsLegal,
+		IsPremium:            posting.AnalyticsData.IsPremium,
+		PaymentTypeGroupName: posting.AnalyticsData.PaymentTypeGroupName,
+		Region:               posting.AnalyticsData.Region,
+		TPLProvider:          posting.AnalyticsData.TPLProvider,
+		TPLProviderId:        posting.AnalyticsData.TPLProviderId,
+		Warehouse:            posting.AnalyticsData.Warehouse,
+		WarehouseId:          posting.AnalyticsData.WarehouseId,
+	}
+	legacy.Customer = FBSCustomer{
+		Address:    posting.Customer.Address,
+		CustomerId: posting.Customer.CustomerId,
+		Name:       posting.Customer.Name,
+		Phone:      posting.Customer.Phone,
+	}
+	legacy.FinancialData = FBSFinancialData{
+		ClusterFrom: posting.FinancialData.ClusterFrom,
+		ClusterTo:   posting.FinancialData.ClusterTo,
+		Products:    make([]FinancialDataProduct, len(posting.FinancialData.Products)),
+	}
+	for i, product := range posting.FinancialData.Products {
+		legacy.FinancialData.Products[i] = FinancialDataProduct{
+			Actions:                 product.Actions,
+			ClientPrice:             product.CustomerPrice.Amount,
+			CommissionAmount:        product.Commission.Amount,
+			CommissionPercent:       product.Commission.Percent,
+			CommissionsCurrencyCode: product.Commission.Currency,
+			CurrencyCode:            product.CustomerPrice.Currency,
+			OldPrice:                product.OldPrice,
+			Payout:                  product.Payout,
+			Price:                   product.Price,
+			ProductId:               product.ProductId,
+			Quantity:                product.Quantity,
+			TotalDiscountPercent:    product.TotalDiscountPercent,
+			TotalDiscountValue:      product.TotalDiscountValue,
+		}
+	}
+	legacy.Products = make([]PostingProduct, len(posting.Products))
+	for i, product := range posting.Products {
+		legacy.Products[i] = PostingProduct{
+			Name:           product.Name,
+			OfferId:        product.OfferId,
+			CurrencyCode:   product.Price.Currency,
+			Price:          product.Price.Amount,
+			Quantity:       product.Quantity,
+			SKU:            product.SKU,
+			IsBLRTraceable: product.IsBLRTraceable,
+		}
+	}
+
+	optional, err := parseIntStrings(posting.Optional.ProductsWithPossibleMandatoryMark)
+	if err != nil {
+		return FBSPostingV4{}, fmt.Errorf("optional product IDs: %w", err)
+	}
+	legacy.Optional.ProductsWithPossibleMandatoryMark = optional
+
+	requirements := []struct {
+		name   string
+		source []string
+		target *[]int64
+	}{
+		{"products_requiring_gtd", posting.Requirements.ProductsRequiringGTD, &legacy.Requirements.ProductsRequiringGTD},
+		{"products_requiring_country", posting.Requirements.ProductsRequiringCountry, &legacy.Requirements.ProductsRequiringCountry},
+		{"products_requiring_mandatory_mark", posting.Requirements.ProductsRequiringMandatoryMark, &legacy.Requirements.ProductsRequiringMandatoryMark},
+		{"products_requiring_rnpt", posting.Requirements.ProductsRequiringRNPT, &legacy.Requirements.ProductsRequiringRNPT},
+	}
+	for _, requirement := range requirements {
+		*requirement.target, err = parseInt64Strings(requirement.source)
+		if err != nil {
+			return FBSPostingV4{}, fmt.Errorf("%s: %w", requirement.name, err)
+		}
+	}
+	return FBSPostingV4{FBSPosting: legacy, Tariffication: posting.Tariffication}, nil
+}
+
+func parseInt64Strings(values []string) ([]int64, error) {
+	result := make([]int64, len(values))
+	for i, value := range values {
+		parsed, err := strconv.ParseInt(value, 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("parse %q: %w", value, err)
+		}
+		result[i] = parsed
+	}
+	return result, nil
+}
+
+func parseIntStrings(values []string) ([]int, error) {
+	result := make([]int, len(values))
+	for i, value := range values {
+		parsed, err := strconv.Atoi(value)
+		if err != nil {
+			return nil, fmt.Errorf("parse %q: %w", value, err)
+		}
+		result[i] = parsed
+	}
+	return result, nil
 }
 
 type PackOrderParams struct {

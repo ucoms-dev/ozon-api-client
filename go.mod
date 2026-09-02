@@ -1,5 +1,7 @@
 module github.com/ucoms-dev/ozon-api-client
 
+retract v1.16.0 // incomplete FBO v3 and FBS v4 response wire models
+
 go 1.20
 
 require github.com/stretchr/testify v1.8.4

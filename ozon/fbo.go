@@ -216,6 +216,16 @@ type GetFBOShipmentsListV3With struct {
 
 type GetFBOShipmentsListV3Response struct {
 	core.CommonResponse
+	Cursor   string                      `json:"cursor"`
+	HasNext  bool                        `json:"has_next"`
+	Postings []GetFBOShipmentsListResult `json:"postings"`
+}
+
+// GetFBOShipmentsListV3CurrentResponse contains the current Ozon wire model.
+// It is separate from GetFBOShipmentsListV3Response to preserve the public
+// source contract released in v1.16.0.
+type GetFBOShipmentsListV3CurrentResponse struct {
+	core.CommonResponse
 	Cursor   string                         `json:"cursor"`
 	HasNext  bool                           `json:"has_next"`
 	Postings []GetFBOShipmentsListV3Posting `json:"postings"`
@@ -223,8 +233,21 @@ type GetFBOShipmentsListV3Response struct {
 
 type GetFBOShipmentsListV3Posting struct {
 	GetFBOShipmentsListResult
+	AnalyticsData GetFBOShipmentsListV3AnalyticsData `json:"analytics_data"`
 	FinancialData GetFBOShipmentsListV3FinancialData `json:"financial_data"`
 	Products      []GetFBOShipmentsListV3Product     `json:"products"`
+}
+
+type GetFBOShipmentsListV3AnalyticsData struct {
+	City                    string               `json:"city"`
+	ClientDeliveryDateBegin time.Time            `json:"client_delivery_date_begin"`
+	ClientDeliveryDateEnd   time.Time            `json:"client_delivery_date_end"`
+	DeliveryType            string               `json:"delivery_type"`
+	IsLegal                 bool                 `json:"is_legal"`
+	IsPremium               bool                 `json:"is_premium"`
+	PaymentTypeGroupName    PaymentTypeGroupName `json:"payment_type_group_name"`
+	WarehouseId             int64                `json:"warehouse_id"`
+	WarehouseName           string               `json:"warehouse_name"`
 }
 
 type GetFBOShipmentsListV3Product struct {
@@ -278,9 +301,30 @@ type PostingLegalInfo struct {
 	KPP         string `json:"kpp"`
 }
 
-// GetShipmentsListV3 returns FBO postings using cursor pagination.
+// GetShipmentsListV3 returns FBO postings using cursor pagination and adapts
+// the current wire response to the source-compatible v1.16.0 response model.
 func (c FBO) GetShipmentsListV3(ctx context.Context, params *GetFBOShipmentsListV3Params) (*GetFBOShipmentsListV3Response, error) {
-	resp := &GetFBOShipmentsListV3Response{}
+	current, err := c.GetShipmentsListV3Current(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &GetFBOShipmentsListV3Response{
+		CommonResponse: current.CommonResponse,
+		Cursor:         current.Cursor,
+		HasNext:        current.HasNext,
+		Postings:       make([]GetFBOShipmentsListResult, len(current.Postings)),
+	}
+	for i, posting := range current.Postings {
+		resp.Postings[i] = adaptFBOShipmentV3(posting)
+	}
+	return resp, nil
+}
+
+// GetShipmentsListV3Current returns FBO postings using the exact current Ozon
+// response contract, including money objects and nested commissions.
+func (c FBO) GetShipmentsListV3Current(ctx context.Context, params *GetFBOShipmentsListV3Params) (*GetFBOShipmentsListV3CurrentResponse, error) {
+	resp := &GetFBOShipmentsListV3CurrentResponse{}
 
 	response, err := c.client.Request(ctx, http.MethodPost, "/v3/posting/fbo/list", params, resp, nil)
 	if err != nil {
@@ -289,6 +333,51 @@ func (c FBO) GetShipmentsListV3(ctx context.Context, params *GetFBOShipmentsList
 	response.CopyCommonResponse(&resp.CommonResponse)
 
 	return resp, nil
+}
+
+func adaptFBOShipmentV3(posting GetFBOShipmentsListV3Posting) GetFBOShipmentsListResult {
+	legacy := posting.GetFBOShipmentsListResult
+	legacy.AnalyticsData = GetFBOShipmentsListResultAnalyticsData{
+		DeliveryType:         posting.AnalyticsData.DeliveryType,
+		IsLegal:              posting.AnalyticsData.IsLegal,
+		IsPremium:            posting.AnalyticsData.IsPremium,
+		PaymentTypeGroupName: posting.AnalyticsData.PaymentTypeGroupName,
+		WarehouseId:          posting.AnalyticsData.WarehouseId,
+		WarehouseName:        posting.AnalyticsData.WarehouseName,
+	}
+	legacy.FinancialData = FBOFinancialData{
+		ClusterFrom: posting.FinancialData.ClusterFrom,
+		ClusterTo:   posting.FinancialData.ClusterTo,
+		Products:    make([]FinancialDataProduct, len(posting.FinancialData.Products)),
+	}
+	for i, product := range posting.FinancialData.Products {
+		legacy.FinancialData.Products[i] = FinancialDataProduct{
+			Actions:                 product.Actions,
+			CommissionAmount:        product.Commission.Amount,
+			CommissionPercent:       product.Commission.Percent,
+			CommissionsCurrencyCode: product.Commission.Currency,
+			OldPrice:                product.OldPrice,
+			Payout:                  product.Payout,
+			Price:                   product.Price,
+			ProductId:               product.ProductId,
+			Quantity:                product.Quantity,
+			TotalDiscountPercent:    product.TotalDiscountPercent,
+			TotalDiscountValue:      product.TotalDiscountValue,
+		}
+	}
+	legacy.Products = make([]FBOPostingProduct, len(posting.Products))
+	for i, product := range posting.Products {
+		legacy.Products[i] = FBOPostingProduct{
+			DigitalCodes: product.DigitalCodes,
+			CurrencyCode: product.Price.Currency,
+			Name:         product.Name,
+			OfferId:      product.OfferId,
+			Price:        product.Price.Amount,
+			Quantity:     product.Quantity,
+			SKU:          product.SKU,
+		}
+	}
+	return legacy
 }
 
 type GetShipmentDetailsParams struct {
@@ -704,7 +793,7 @@ func (c FBO) GetSupplyOrdersByStatus(ctx context.Context) (*GetSupplyOrdersBySta
 
 	resp := &GetSupplyOrdersByStatusResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodPost, url, &GetSupplyOrdersByStatusParams{}, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, nil, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -882,6 +971,14 @@ type GetSupplyContentParams struct {
 
 	// Sorting by parameters
 	SortField string `json:"sort_field"`
+
+	// Parameters for calculating placement tags.
+	ItemTagsCalculation *GetSupplyContentItemTagsCalculation `json:"item_tags_calculation,omitempty"`
+}
+
+type GetSupplyContentItemTagsCalculation struct {
+	DropoffWarehouseId  string   `json:"dropoff_warehouse_id"`
+	StorageWarehouseIds []string `json:"storage_warehouse_ids"`
 }
 
 type GetSupplyContentResponse struct {
@@ -939,6 +1036,15 @@ type SupplyContentItem struct {
 
 	// Type of wrapper
 	ShipmentType string `json:"shipment_type"`
+
+	// Product identifier in the seller's system.
+	OfferId string `json:"offer_id"`
+
+	// Calculated product placement tags.
+	Tags []string `json:"tags"`
+
+	// Product placement zone.
+	PlacementZone string `json:"placement_zone"`
 }
 
 func (c FBO) GetSupplyContent(ctx context.Context, params *GetSupplyContentParams) (*GetSupplyContentResponse, error) {
