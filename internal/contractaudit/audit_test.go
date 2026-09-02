@@ -192,6 +192,45 @@ func Dynamic(path string) { Request(http.MethodPost, path) }
 	}
 }
 
+func TestLoadClientOperationsFailsOnConditionalOrShadowedURLAssignments(t *testing.T) {
+	t.Parallel()
+
+	tests := map[string]string{
+		"conditional assignment": `package fixture
+import "net/http"
+func Conditional(condition bool) {
+	url := "/v1/one"
+	if condition { url = "/v1/two" }
+	Request(http.MethodPost, url)
+}
+`,
+		"shadowed assignment": `package fixture
+import "net/http"
+func Shadowed() {
+	url := "/v1/one"
+	{ url := "/v1/two"; _ = url }
+	Request(http.MethodPost, url)
+}
+`,
+	}
+
+	for name, source := range tests {
+		name, source := name, source
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			sourceDir := t.TempDir()
+			if err := os.WriteFile(filepath.Join(sourceDir, "fixture.go"), []byte(source), 0o600); err != nil {
+				t.Fatalf("write Go fixture: %v", err)
+			}
+
+			_, err := LoadClientOperations(sourceDir)
+			if err == nil || !strings.Contains(err.Error(), "unresolved Request call") {
+				t.Fatalf("error = %v, want unresolved Request call", err)
+			}
+		})
+	}
+}
+
 func TestWriteMarkdownRendersDeterministicActionableSections(t *testing.T) {
 	t.Parallel()
 

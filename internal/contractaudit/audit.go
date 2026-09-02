@@ -50,6 +50,7 @@ type stringAssignment struct {
 	Name       string
 	Expression ast.Expr
 	Position   token.Pos
+	TopLevel   bool
 }
 
 func WriteMarkdown(writer io.Writer, report Report, metadata Metadata) error {
@@ -309,6 +310,22 @@ func Compare(client, spec []Operation) Report {
 }
 
 func collectStringAssignments(body *ast.BlockStmt) []stringAssignment {
+	topLevelPositions := make(map[token.Pos]struct{})
+	for _, statement := range body.List {
+		switch statement := statement.(type) {
+		case *ast.AssignStmt:
+			topLevelPositions[statement.Pos()] = struct{}{}
+		case *ast.DeclStmt:
+			declaration, ok := statement.Decl.(*ast.GenDecl)
+			if !ok {
+				continue
+			}
+			for _, spec := range declaration.Specs {
+				topLevelPositions[spec.Pos()] = struct{}{}
+			}
+		}
+	}
+
 	var assignments []stringAssignment
 	ast.Inspect(body, func(node ast.Node) bool {
 		switch statement := node.(type) {
@@ -325,6 +342,7 @@ func collectStringAssignments(body *ast.BlockStmt) []stringAssignment {
 					Name:       identifier.Name,
 					Expression: statement.Rhs[i],
 					Position:   statement.Pos(),
+					TopLevel:   hasPosition(topLevelPositions, statement.Pos()),
 				})
 			}
 		case *ast.ValueSpec:
@@ -336,6 +354,7 @@ func collectStringAssignments(body *ast.BlockStmt) []stringAssignment {
 					Name:       name.Name,
 					Expression: statement.Values[i],
 					Position:   statement.Pos(),
+					TopLevel:   hasPosition(topLevelPositions, statement.Pos()),
 				})
 			}
 		}
@@ -347,11 +366,20 @@ func collectStringAssignments(body *ast.BlockStmt) []stringAssignment {
 	return assignments
 }
 
+func hasPosition(positions map[token.Pos]struct{}, position token.Pos) bool {
+	_, exists := positions[position]
+	return exists
+}
+
 func stringValuesBefore(assignments []stringAssignment, position token.Pos) map[string]string {
 	values := make(map[string]string)
 	for _, assignment := range assignments {
 		if assignment.Position >= position {
 			break
+		}
+		if !assignment.TopLevel {
+			delete(values, assignment.Name)
+			continue
 		}
 		value := stringLiteral(assignment.Expression, values)
 		if value == "" {
