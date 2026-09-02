@@ -18,7 +18,7 @@ func TestGetFBOShipmentsListV3UsesCursorContract(t *testing.T) {
 		http.MethodPost,
 		"/v3/posting/fbo/list",
 		`{"cursor":"next-1","filter":{"order_numbers":["42"],"posting_numbers":["100-1"],"since":"2026-08-01T00:00:00Z","statuses":["delivering"],"to":"2026-08-02T00:00:00Z"},"limit":100,"sort_dir":"ASC","translit":true,"with":{"analytics_data":true,"financial_data":true,"legal_info":true}}`,
-		`{"cursor":"next-2","has_next":true,"postings":[{"order_id":42,"order_number":"42","posting_number":"100-1","status":"delivering","substatus":"posting_on_way_to_city","cancellation":{"cancel_reason":"buyer request"},"external_order":{"is_external":true,"platform_name":"Ozon"},"legal_info":{"company_name":"UCOMS"}}]}`,
+		`{"cursor":"next-2","has_next":true,"postings":[{"order_id":42,"order_number":"42","posting_number":"100-1","status":"delivering","substatus":"posting_on_way_to_city","cancellation":{"cancel_reason":"buyer request"},"external_order":{"is_external":true,"platform_name":"Ozon"},"financial_data":{"products":[{"commission":{"amount":12.5,"currency":"RUB","percent":10},"price":125.0,"product_id":123,"quantity":2}]},"legal_info":{"company_name":"UCOMS"},"products":[{"offer_id":"offer-1","price":{"amount":"123.45","currency":"RUB"},"quantity":2,"sku":123}]}]}`,
 	)
 	server := httptest.NewServer(handler)
 	defer server.Close()
@@ -63,5 +63,11 @@ func TestGetFBOShipmentsListV3UsesCursorContract(t *testing.T) {
 	}
 	if posting.LegalInfo.CompanyName != "UCOMS" {
 		t.Errorf("legal company name = %q", posting.LegalInfo.CompanyName)
+	}
+	if len(posting.Products) != 1 || posting.Products[0].Price.Amount != "123.45" || posting.Products[0].Price.Currency != "RUB" {
+		t.Fatalf("FBO product money was not decoded: %+v", posting.Products)
+	}
+	if len(posting.FinancialData.Products) != 1 || posting.FinancialData.Products[0].Commission.Amount != 12.5 || posting.FinancialData.Products[0].Commission.Currency != "RUB" || posting.FinancialData.Products[0].Commission.Percent != 10 {
+		t.Errorf("FBO nested commission was not decoded: %+v", posting.FinancialData.Products)
 	}
 }

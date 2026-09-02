@@ -18,7 +18,7 @@ func TestGetFBSShipmentsListV4UsesCursorContract(t *testing.T) {
 		http.MethodPost,
 		"/v4/posting/fbs/list",
 		`{"cursor":"page-1","filter":{"delivery_method_ids":["11"],"order_numbers":["42"],"provider_ids":["12"],"since":"2026-08-01T00:00:00Z","statuses":["awaiting_deliver"],"to":"2026-08-02T00:00:00Z","warehouse_ids":["13"]},"limit":100,"sort_dir":"ASC","translit":true,"with":{"analytics_data":true,"barcodes":true,"financial_data":true,"legal_info":true}}`,
-		`{"cursor":"page-2","has_next":true,"postings":[{"order_id":42,"order_number":"42","posting_number":"100-1","status":"awaiting_deliver","container_sort_type":"SORT","delivery_schema":"FBS","destination_place_id":17,"destination_place_name":"SC","integration_type_flow":"ozon","is_click_and_collect":true,"is_presortable":true,"require_blr_traceable_attrs":true,"shipment_date_without_delay":"2026-08-02T03:00:00Z","tariffication":{"current_tariff_charge":{"amount":"12.50","currency":"RUB"},"current_tariff_rate":2.5,"current_tariff_type":"discount"},"volume_weight":2.5}]}`,
+		`{"cursor":"page-2","has_next":true,"postings":[{"order_id":42,"order_number":"42","posting_number":"100-1","status":"awaiting_deliver","container_sort_type":"SORT","delivery_schema":"FBS","destination_place_id":17,"destination_place_name":"SC","financial_data":{"products":[{"commission":{"amount":23.4,"currency":"RUB","percent":10},"customer_price":{"amount":"234.56","currency":"RUB"},"price":210.0,"product_id":456,"quantity":1}]},"integration_type_flow":"ozon","is_click_and_collect":true,"is_presortable":true,"products":[{"offer_id":"offer-1","price":{"amount":"234.56","currency":"RUB"},"quantity":1,"sku":456}],"requirements":{"products_requiring_change_country":["456"],"products_requiring_country":["456"],"products_requiring_gtd":["456"],"products_requiring_imei":["456"],"products_requiring_jw_uin":["456"],"products_requiring_mandatory_mark":["456"],"products_requiring_rnpt":["456"],"products_requiring_weight":["456"]},"require_blr_traceable_attrs":true,"shipment_date_without_delay":"2026-08-02T03:00:00Z","tariffication":{"current_tariff_charge":{"amount":"12.50","currency":"RUB"},"current_tariff_rate":2.5,"current_tariff_type":"discount"},"volume_weight":2.5}]}`,
 	)
 	server := httptest.NewServer(handler)
 	defer server.Close()
@@ -63,6 +63,18 @@ func TestGetFBSShipmentsListV4UsesCursorContract(t *testing.T) {
 	}
 	if posting.Tariffication.CurrentTariffCharge.Amount != "12.50" || posting.Tariffication.CurrentTariffCharge.Currency != "RUB" {
 		t.Errorf("current tariff charge = %+v", posting.Tariffication.CurrentTariffCharge)
+	}
+	if len(posting.Products) != 1 || posting.Products[0].Price.Amount != "234.56" || posting.Products[0].Price.Currency != "RUB" {
+		t.Fatalf("FBS product money was not decoded: %+v", posting.Products)
+	}
+	if len(posting.Requirements.ProductsRequiringWeight) != 1 || posting.Requirements.ProductsRequiringWeight[0] != "456" {
+		t.Errorf("FBS string SKU requirements were not decoded: %+v", posting.Requirements)
+	}
+	if len(posting.FinancialData.Products) != 1 || posting.FinancialData.Products[0].CustomerPrice.Amount != "234.56" || posting.FinancialData.Products[0].CustomerPrice.Currency != "RUB" {
+		t.Fatalf("FBS customer money was not decoded: %+v", posting.FinancialData.Products)
+	}
+	if posting.FinancialData.Products[0].Commission.Amount != 23.4 || posting.FinancialData.Products[0].Commission.Percent != 10 || posting.FinancialData.Products[0].Commission.Currency != "RUB" {
+		t.Errorf("FBS nested commission was not decoded: %+v", posting.FinancialData.Products[0])
 	}
 }
 

@@ -271,7 +271,59 @@ type FBSPostingTarifficationStep struct {
 // legacy offset response where tariffication used string amounts.
 type FBSPostingV4 struct {
 	FBSPosting
+	FinancialData FBSFinancialDataV4        `json:"financial_data"`
+	Products      []FBSPostingV4Product     `json:"products"`
+	Requirements  FBSPostingV4Requirements  `json:"requirements"`
 	Tariffication FBSPostingV4Tariffication `json:"tariffication"`
+}
+
+type FBSPostingV4Product struct {
+	IMEI                []string     `json:"imei"`
+	IsBLRTraceable      bool         `json:"is_blr_traceable"`
+	IsMarketplaceBuyout bool         `json:"is_marketplace_buyout"`
+	Name                string       `json:"name"`
+	OfferId             string       `json:"offer_id"`
+	Price               PostingMoney `json:"price"`
+	ProductColor        string       `json:"product_color"`
+	Quantity            int32        `json:"quantity"`
+	SKU                 int64        `json:"sku"`
+	Weight              float64      `json:"weight"`
+}
+
+type FBSPostingV4Requirements struct {
+	ProductsRequiringChangeCountry []string `json:"products_requiring_change_country"`
+	ProductsRequiringCountry       []string `json:"products_requiring_country"`
+	ProductsRequiringGTD           []string `json:"products_requiring_gtd"`
+	ProductsRequiringIMEI          []string `json:"products_requiring_imei"`
+	ProductsRequiringJWUIN         []string `json:"products_requiring_jw_uin"`
+	ProductsRequiringMandatoryMark []string `json:"products_requiring_mandatory_mark"`
+	ProductsRequiringRNPT          []string `json:"products_requiring_rnpt"`
+	ProductsRequiringWeight        []string `json:"products_requiring_weight"`
+}
+
+type FBSFinancialDataV4 struct {
+	ClusterFrom string                      `json:"cluster_from"`
+	ClusterTo   string                      `json:"cluster_to"`
+	Products    []FBSFinancialDataV4Product `json:"products"`
+}
+
+type FBSFinancialDataV4Product struct {
+	Actions              []string                     `json:"actions"`
+	Commission           FBSFinancialDataV4Commission `json:"commission"`
+	CustomerPrice        PostingMoney                 `json:"customer_price"`
+	OldPrice             float64                      `json:"old_price"`
+	Payout               float64                      `json:"payout"`
+	Price                float64                      `json:"price"`
+	ProductId            int64                        `json:"product_id"`
+	Quantity             int64                        `json:"quantity"`
+	TotalDiscountPercent float64                      `json:"total_discount_percent"`
+	TotalDiscountValue   float64                      `json:"total_discount_value"`
+}
+
+type FBSFinancialDataV4Commission struct {
+	Amount   float64 `json:"amount"`
+	Currency string  `json:"currency"`
+	Percent  int64   `json:"percent"`
 }
 
 type FBSPostingV4Tariffication struct {

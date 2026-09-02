@@ -29,7 +29,7 @@ func requestContractHandler(
 		if err != nil {
 			t.Fatalf("read request body: %v", err)
 		}
-		if string(body) != wantBody {
+		if wantBody != "" && string(body) != wantBody {
 			t.Errorf("request body = %s, want %s", body, wantBody)
 		}
 

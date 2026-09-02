@@ -216,9 +216,49 @@ type GetFBOShipmentsListV3With struct {
 
 type GetFBOShipmentsListV3Response struct {
 	core.CommonResponse
-	Cursor   string                      `json:"cursor"`
-	HasNext  bool                        `json:"has_next"`
-	Postings []GetFBOShipmentsListResult `json:"postings"`
+	Cursor   string                         `json:"cursor"`
+	HasNext  bool                           `json:"has_next"`
+	Postings []GetFBOShipmentsListV3Posting `json:"postings"`
+}
+
+type GetFBOShipmentsListV3Posting struct {
+	GetFBOShipmentsListResult
+	FinancialData GetFBOShipmentsListV3FinancialData `json:"financial_data"`
+	Products      []GetFBOShipmentsListV3Product     `json:"products"`
+}
+
+type GetFBOShipmentsListV3Product struct {
+	DigitalCodes        []string     `json:"digital_codes"`
+	IsMarketplaceBuyout bool         `json:"is_marketplace_buyout"`
+	Name                string       `json:"name"`
+	OfferId             string       `json:"offer_id"`
+	Price               PostingMoney `json:"price"`
+	Quantity            int64        `json:"quantity"`
+	SKU                 int64        `json:"sku"`
+}
+
+type GetFBOShipmentsListV3FinancialData struct {
+	ClusterFrom string                                      `json:"cluster_from"`
+	ClusterTo   string                                      `json:"cluster_to"`
+	Products    []GetFBOShipmentsListV3FinancialDataProduct `json:"products"`
+}
+
+type GetFBOShipmentsListV3FinancialDataProduct struct {
+	Actions              []string                                 `json:"actions"`
+	Commission           GetFBOShipmentsListV3FinancialCommission `json:"commission"`
+	OldPrice             float64                                  `json:"old_price"`
+	Payout               float64                                  `json:"payout"`
+	Price                float64                                  `json:"price"`
+	ProductId            int64                                    `json:"product_id"`
+	Quantity             int64                                    `json:"quantity"`
+	TotalDiscountPercent float64                                  `json:"total_discount_percent"`
+	TotalDiscountValue   float64                                  `json:"total_discount_value"`
+}
+
+type GetFBOShipmentsListV3FinancialCommission struct {
+	Amount   float64 `json:"amount"`
+	Currency string  `json:"currency"`
+	Percent  int64   `json:"percent"`
 }
 
 type FBOPostingCancellation struct {
@@ -664,7 +704,7 @@ func (c FBO) GetSupplyOrdersByStatus(ctx context.Context) (*GetSupplyOrdersBySta
 
 	resp := &GetSupplyOrdersByStatusResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, &GetSupplyOrdersByStatusParams{}, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, &GetSupplyOrdersByStatusParams{}, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -693,7 +733,7 @@ func (c FBO) GetSupplyTimeslots(ctx context.Context, params *GetSupplyTimeslotsP
 
 	resp := &GetSupplyTimeslotsResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -725,7 +765,7 @@ func (c FBO) UpdateSupplyTimeslot(ctx context.Context, params *UpdateSupplyTimes
 
 	resp := &UpdateSupplyTimeslotResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -754,7 +794,7 @@ func (c FBO) GetSupplyTimeslotStatus(ctx context.Context, params *GetSupplyTimes
 
 	resp := &GetSupplyTimeslotStatusResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -786,7 +826,7 @@ func (c FBO) CreatePass(ctx context.Context, params *CreatePassParams) (*CreateP
 
 	resp := &CreatePassResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -815,7 +855,7 @@ func (c FBO) GetPass(ctx context.Context, params *GetPassParams) (*GetPassRespon
 
 	resp := &GetPassResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -906,7 +946,7 @@ func (c FBO) GetSupplyContent(ctx context.Context, params *GetSupplyContentParam
 
 	resp := &GetSupplyContentResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1211,7 +1251,7 @@ func (c FBO) CancelSuppyOrder(ctx context.Context, params *CancelSuppyOrderParam
 
 	resp := &CancelSuppyOrderResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1263,7 +1303,7 @@ func (c FBO) StatusCancelledSupplyOrder(ctx context.Context, params *StatusCance
 
 	resp := &StatusCancelledSupplyOrderResponse{}
 
-	response, err := c.client.Request(ctx, http.MethodGet, url, params, resp, nil)
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
