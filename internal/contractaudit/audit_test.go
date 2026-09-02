@@ -212,6 +212,14 @@ func Shadowed() {
 	Request(http.MethodPost, url)
 }
 `,
+		"compound assignment": `package fixture
+import "net/http"
+func Compound() {
+	url := "/v1"
+	url += "/items"
+	Request(http.MethodPost, url)
+}
+`,
 	}
 
 	for name, source := range tests {

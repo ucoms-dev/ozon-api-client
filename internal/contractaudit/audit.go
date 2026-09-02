@@ -314,7 +314,9 @@ func collectStringAssignments(body *ast.BlockStmt) []stringAssignment {
 	for _, statement := range body.List {
 		switch statement := statement.(type) {
 		case *ast.AssignStmt:
-			topLevelPositions[statement.Pos()] = struct{}{}
+			if statement.Tok == token.DEFINE || statement.Tok == token.ASSIGN {
+				topLevelPositions[statement.Pos()] = struct{}{}
+			}
 		case *ast.DeclStmt:
 			declaration, ok := statement.Decl.(*ast.GenDecl)
 			if !ok {
