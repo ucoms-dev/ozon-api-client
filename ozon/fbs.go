@@ -121,6 +121,12 @@ type FBSPosting struct {
 	// Cancellation details
 	Cancellation FBSCancellation `json:"cancellation"`
 
+	// Cargo container details
+	Container FBSPostingContainer `json:"container"`
+
+	// Container sorting type
+	ContainerSortType string `json:"container_sort_type"`
+
 	// Customer details
 	Customer FBSCustomer `json:"customer"`
 
@@ -130,8 +136,21 @@ type FBSPosting struct {
 	// Delivery method
 	DeliveryMethod FBSDeliveryMethod `json:"delivery_method"`
 
+	// Delivery scheme
+	DeliverySchema string `json:"delivery_schema"`
+
+	// Destination place identifier and name
+	DestinationPlaceId   int64  `json:"destination_place_id"`
+	DestinationPlaceName string `json:"destination_place_name"`
+
+	// Information about an order created on an external platform
+	ExternalOrder PostingExternalOrder `json:"external_order"`
+
 	// Data on the product cost, discount amount, payout and commission
 	FinancialData FBSFinancialData `json:"financial_data"`
+
+	// Delivery service integration flow
+	IntegrationTypeFlow string `json:"integration_type_flow"`
 
 	// Start date and time of shipment processing
 	InProccessAt time.Time `json:"in_process_at"`
@@ -139,12 +158,19 @@ type FBSPosting struct {
 	// If Ozon Express fast delivery was used — `true`
 	IsExpress bool `json:"is_express"`
 
+	// Click-and-collect and presort flags
+	IsClickAndCollect bool `json:"is_click_and_collect"`
+	IsPresortable     bool `json:"is_presortable"`
+
 	// Indication that there is a multi-box product in the shipment
 	// and you need to pass the number of boxes for it
 	IsMultibox bool `json:"is_multibox"`
 
 	// Number of boxes in which the product is packed
 	MultiBoxQuantity int32 `json:"multi_box_qty"`
+
+	// Buyer legal information
+	LegalInfo PostingLegalInfo `json:"legal_info"`
 
 	// Identifier of the order to which the shipment belongs
 	OrderId int64 `json:"order_id"`
@@ -174,10 +200,19 @@ type FBSPosting struct {
 	// change the shipment status to the next one
 	Requirements FBSRequirements `json:"requirements"`
 
+	// true when Belarus traceability attributes are required
+	RequireBLRTraceableAttrs bool `json:"require_blr_traceable_attrs"`
+
 	// Date and time before which the shipment must be packaged.
 	// If the shipment is not packaged by this date, it will be
 	// canceled automatically
 	ShipmentDate time.Time `json:"shipment_date"`
+
+	// Shipment date without a delay allowance
+	ShipmentDateWithoutDelay time.Time `json:"shipment_date_without_delay"`
+
+	// Sorting center details
+	SortingCenter FBSPostingSortingCenter `json:"sorting_center"`
 
 	// Shipment status
 	Status string `json:"status"`
@@ -194,11 +229,61 @@ type FBSPosting struct {
 	// Details on shipping rate
 	Tariffication FBSPostingTarifficationList `json:"tariffication"`
 
+	// Current cursor API tariffication steps
+	TarifficationSteps []FBSPostingTarifficationStep `json:"tariffication_steps"`
+
+	// Shipment volume weight
+	VolumeWeight float64 `json:"volume_weight"`
+
 	// Economy product identifier
 	QuantumId int64 `json:"quantum_id"`
 
 	// List of products with additional characteristics
 	Optional FBSPostingOptional `json:"optional"`
+}
+
+type FBSPostingContainer struct {
+	CargoType       string `json:"cargo_type"`
+	ContainerDate   string `json:"container_date"`
+	ContainerId     int64  `json:"container_id"`
+	ContainerNumber int32  `json:"container_number"`
+}
+
+type FBSPostingSortingCenter struct {
+	Code string `json:"code"`
+	Name string `json:"name"`
+}
+
+type PostingMoney struct {
+	Amount   string `json:"amount"`
+	Currency string `json:"currency"`
+}
+
+type FBSPostingTarifficationStep struct {
+	MinCharge        PostingMoney `json:"min_charge"`
+	TariffCharge     PostingMoney `json:"tariff_charge"`
+	TariffDeadlineAt time.Time    `json:"tariff_deadline_at"`
+	TariffRate       float64      `json:"tariff_rate"`
+	TariffType       string       `json:"tariff_type"`
+}
+
+// FBSPostingV4 keeps the current cursor response contract separate from the
+// legacy offset response where tariffication used string amounts.
+type FBSPostingV4 struct {
+	FBSPosting
+	Tariffication FBSPostingV4Tariffication `json:"tariffication"`
+}
+
+type FBSPostingV4Tariffication struct {
+	CurrentTariffCharge    PostingMoney `json:"current_tariff_charge"`
+	CurrentTariffMinCharge PostingMoney `json:"current_tariff_min_charge"`
+	CurrentTariffRate      float64      `json:"current_tariff_rate"`
+	CurrentTariffType      string       `json:"current_tariff_type"`
+	NextTariffCharge       PostingMoney `json:"next_tariff_charge"`
+	NextTariffMinCharge    PostingMoney `json:"next_tariff_min_charge"`
+	NextTariffRate         float64      `json:"next_tariff_rate"`
+	NextTariffStartsAt     time.Time    `json:"next_tariff_starts_at"`
+	NextTariffType         string       `json:"next_tariff_type"`
 }
 
 type FBSPostingOptional struct {
@@ -569,6 +654,9 @@ type FinancialDataProductPicking struct {
 	Tag string `json:"tag"`
 }
 
+// ListUnprocessedShipments returns unprocessed FBS postings using offset pagination.
+//
+// Deprecated: Use ListUnprocessedShipmentsV4.
 func (c FBS) ListUnprocessedShipments(ctx context.Context, params *ListUnprocessedShipmentsParams) (*ListUnprocessedShipmentsResponse, error) {
 	url := "/v3/posting/fbs/unfulfilled/list"
 
@@ -689,12 +777,119 @@ type GetFBSShipmentsListResult struct {
 // You can filter shipments by their status. The list of available statuses is specified in the description of the filter.status parameter.
 //
 // The true value of the has_next parameter in the response means there is not the entire array of shipments in the response. To get information on the remaining shipments, make a new request with a different offset value.
+//
+// Deprecated: Ozon discontinued /v3/posting/fbs/list on August 31, 2026.
+// Use GetFBSShipmentsListV4.
 func (c FBS) GetFBSShipmentsList(ctx context.Context, params *GetFBSShipmentsListParams) (*GetFBSShipmentsListResponse, error) {
 	url := "/v3/posting/fbs/list"
 
 	resp := &GetFBSShipmentsListResponse{}
 
 	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
+
+	return resp, nil
+}
+
+type PostingLastChangedStatusDate struct {
+	From *time.Time `json:"from,omitempty"`
+	To   *time.Time `json:"to,omitempty"`
+}
+
+type GetFBSShipmentsListV4Params struct {
+	Cursor   string                      `json:"cursor,omitempty"`
+	Filter   GetFBSShipmentsListV4Filter `json:"filter"`
+	Limit    int64                       `json:"limit"`
+	SortDir  Order                       `json:"sort_dir,omitempty"`
+	Translit bool                        `json:"translit,omitempty"`
+	With     *GetFBSShipmentsListV4With  `json:"with,omitempty"`
+}
+
+type GetFBSShipmentsListV4Filter struct {
+	DeliveryMethodIds     []string                      `json:"delivery_method_ids,omitempty"`
+	IntegrationTypeFlow   []string                      `json:"integration_type_flow,omitempty"`
+	IsBLRTraceable        bool                          `json:"is_blr_traceable,omitempty"`
+	LastChangedStatusDate *PostingLastChangedStatusDate `json:"last_changed_status_date,omitempty"`
+	OrderId               int64                         `json:"order_id,omitempty"`
+	OrderNumbers          []string                      `json:"order_numbers,omitempty"`
+	ProviderIds           []string                      `json:"provider_ids,omitempty"`
+	Since                 time.Time                     `json:"since"`
+	Statuses              []string                      `json:"statuses,omitempty"`
+	To                    time.Time                     `json:"to"`
+	WarehouseIds          []string                      `json:"warehouse_ids,omitempty"`
+}
+
+type GetFBSShipmentsListV4With struct {
+	AnalyticsData bool `json:"analytics_data,omitempty"`
+	Barcodes      bool `json:"barcodes,omitempty"`
+	FinancialData bool `json:"financial_data,omitempty"`
+	LegalInfo     bool `json:"legal_info,omitempty"`
+}
+
+type GetFBSShipmentsListV4Response struct {
+	core.CommonResponse
+	Cursor   string         `json:"cursor"`
+	HasNext  bool           `json:"has_next"`
+	Postings []FBSPostingV4 `json:"postings"`
+}
+
+// GetFBSShipmentsListV4 returns FBS postings using cursor pagination.
+func (c FBS) GetFBSShipmentsListV4(ctx context.Context, params *GetFBSShipmentsListV4Params) (*GetFBSShipmentsListV4Response, error) {
+	resp := &GetFBSShipmentsListV4Response{}
+
+	response, err := c.client.Request(ctx, http.MethodPost, "/v4/posting/fbs/list", params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
+
+	return resp, nil
+}
+
+type ListUnprocessedShipmentsV4Params struct {
+	Cursor   string                           `json:"cursor,omitempty"`
+	Filter   ListUnprocessedShipmentsV4Filter `json:"filter"`
+	Limit    int64                            `json:"limit"`
+	SortDir  Order                            `json:"sort_dir,omitempty"`
+	Translit bool                             `json:"translit,omitempty"`
+	With     *ListUnprocessedShipmentsV4With  `json:"with,omitempty"`
+}
+
+type ListUnprocessedShipmentsV4Filter struct {
+	CutoffFrom            *time.Time                    `json:"cutoff_from,omitempty"`
+	CutoffTo              *time.Time                    `json:"cutoff_to,omitempty"`
+	DeliveringDateFrom    *time.Time                    `json:"delivering_date_from,omitempty"`
+	DeliveringDateTo      *time.Time                    `json:"delivering_date_to,omitempty"`
+	DeliveryMethodIds     []string                      `json:"delivery_method_ids,omitempty"`
+	LastChangedStatusDate *PostingLastChangedStatusDate `json:"last_changed_status_date,omitempty"`
+	ProviderIds           []string                      `json:"provider_ids,omitempty"`
+	Statuses              []string                      `json:"statuses,omitempty"`
+	WarehouseIds          []string                      `json:"warehouse_ids,omitempty"`
+}
+
+type ListUnprocessedShipmentsV4With struct {
+	AnalyticsData bool `json:"analytics_data,omitempty"`
+	Barcodes      bool `json:"barcodes,omitempty"`
+	FinancialData bool `json:"financial_data,omitempty"`
+	LegalInfo     bool `json:"legal_info,omitempty"`
+}
+
+type ListUnprocessedShipmentsV4Response struct {
+	core.CommonResponse
+	Count    int64          `json:"count"`
+	Cursor   string         `json:"cursor"`
+	HasNext  bool           `json:"has_next"`
+	Postings []FBSPostingV4 `json:"postings"`
+}
+
+// ListUnprocessedShipmentsV4 returns unprocessed FBS postings using cursor pagination.
+func (c FBS) ListUnprocessedShipmentsV4(ctx context.Context, params *ListUnprocessedShipmentsV4Params) (*ListUnprocessedShipmentsV4Response, error) {
+	resp := &ListUnprocessedShipmentsV4Response{}
+
+	response, err := c.client.Request(ctx, http.MethodPost, "/v4/posting/fbs/unfulfilled/list", params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
