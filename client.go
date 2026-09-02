@@ -90,6 +90,9 @@ func (c Client) Request(ctx context.Context, method string, path string, req, re
 	response.Data = resp
 	response.StatusCode = httpResp.StatusCode
 	if httpResp.StatusCode == http.StatusOK {
+		if len(bytes.TrimSpace(body)) == 0 {
+			return response, nil
+		}
 		err = json.Unmarshal(body, &response.Data)
 	} else {
 		err = json.Unmarshal(body, &response)

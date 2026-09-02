@@ -12,6 +12,116 @@ type Certificates struct {
 	client *core.Client
 }
 
+type ProductCertificateV2Option struct {
+	Name     string `json:"name"`
+	Required bool   `json:"required"`
+}
+
+type ProductCertificateOptionsV2Response struct {
+	core.CommonResponse
+
+	Options []ProductCertificateV2Option `json:"option"`
+}
+
+// GetProductCertificateOptionsV2 returns all supported certificate fields and
+// indicates which ones are required.
+func (c Certificates) GetProductCertificateOptionsV2(ctx context.Context) (*ProductCertificateOptionsV2Response, error) {
+	resp := &ProductCertificateOptionsV2Response{}
+	response, err := c.client.Request(ctx, http.MethodPost, "/v2/product/certification/options", nil, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
+	return resp, nil
+}
+
+type ProductCertificateV2Date struct {
+	Day   int32 `json:"day"`
+	Month int32 `json:"month"`
+	Year  int32 `json:"year"`
+}
+
+type ProductCertificateV2ExpiredDate struct {
+	Date     *ProductCertificateV2Date `json:"date,omitempty"`
+	Infinite bool                      `json:"infinite,omitempty"`
+}
+
+type ProductCertificateV2File struct {
+	FileContent string `json:"file_content"`
+	Name        string `json:"name"`
+}
+
+type ProductCertificateV2Params struct {
+	AccordanceType     string                           `json:"accordance_type,omitempty"`
+	CertificateCountry string                           `json:"certificate_country,omitempty"`
+	CertificateType    string                           `json:"certificate_type,omitempty"`
+	ExpiredDate        *ProductCertificateV2ExpiredDate `json:"expired_date,omitempty"`
+	Files              []ProductCertificateV2File       `json:"files,omitempty"`
+	IssueDate          *time.Time                       `json:"issue_date,omitempty"`
+	LinkToRegistry     string                           `json:"link_to_registry,omitempty"`
+	Name               string                           `json:"name,omitempty"`
+	Number             string                           `json:"number,omitempty"`
+	ProductType        string                           `json:"product_type,omitempty"`
+	SKUs               []string                         `json:"skus,omitempty"`
+}
+
+type GetProductCertificateParamsV2Request struct {
+	Params ProductCertificateV2Params `json:"params"`
+}
+
+type ProductCertificateV2RequiredParam struct {
+	Name     string `json:"name"`
+	Required bool   `json:"required"`
+}
+
+type GetProductCertificateParamsV2Response struct {
+	core.CommonResponse
+
+	Params []ProductCertificateV2RequiredParam `json:"params"`
+}
+
+// GetProductCertificateParamsV2 validates the supplied certificate data and
+// returns the fields required for its selected certificate types.
+func (c Certificates) GetProductCertificateParamsV2(ctx context.Context, params *GetProductCertificateParamsV2Request) (*GetProductCertificateParamsV2Response, error) {
+	resp := &GetProductCertificateParamsV2Response{}
+	response, err := c.client.Request(ctx, http.MethodPost, "/v2/product/certification/params", params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
+	return resp, nil
+}
+
+type CreateProductCertificateV2Request struct {
+	Params ProductCertificateV2Params `json:"params"`
+}
+
+type ProductCertificateV2CreateParam struct {
+	Error string `json:"error"`
+	Name  string `json:"name"`
+	State string `json:"state"`
+}
+
+type CreateProductCertificateV2Response struct {
+	core.CommonResponse
+
+	CertificateID *int64                            `json:"certificate_id"`
+	Params        []ProductCertificateV2CreateParam `json:"params"`
+	Status        string                            `json:"status"`
+}
+
+// CreateProductCertificateV2 creates a product certificate using the current
+// JSON v2 contract.
+func (c Certificates) CreateProductCertificateV2(ctx context.Context, params *CreateProductCertificateV2Request) (*CreateProductCertificateV2Response, error) {
+	resp := &CreateProductCertificateV2Response{}
+	response, err := c.client.Request(ctx, http.MethodPost, "/v2/product/certificate/create", params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
+	return resp, nil
+}
+
 type ListOfAccordanceTypesResponse struct {
 	core.CommonResponse
 
@@ -560,7 +670,11 @@ type AddCertificatesForProductsResponse struct {
 	Id int `json:"id"`
 }
 
-// Adding certificates for products
+// Adding certificates for products.
+//
+// Deprecated: Ozon discontinued /v1/product/certificate/create on August 31, 2026.
+// Use GetProductCertificateOptionsV2, GetProductCertificateParamsV2, and
+// CreateProductCertificateV2.
 func (c Certificates) AddForProducts(ctx context.Context, params *AddCertificatesForProductsParams) (*AddCertificatesForProductsResponse, error) {
 	url := "/v1/product/certificate/create"
 
