@@ -267,6 +267,25 @@ type FBSPostingTarifficationStep struct {
 	TariffType       string       `json:"tariff_type"`
 }
 
+// FBSPostingV4 keeps the current cursor response contract separate from the
+// legacy offset response where tariffication used string amounts.
+type FBSPostingV4 struct {
+	FBSPosting
+	Tariffication FBSPostingV4Tariffication `json:"tariffication"`
+}
+
+type FBSPostingV4Tariffication struct {
+	CurrentTariffCharge    PostingMoney `json:"current_tariff_charge"`
+	CurrentTariffMinCharge PostingMoney `json:"current_tariff_min_charge"`
+	CurrentTariffRate      float64      `json:"current_tariff_rate"`
+	CurrentTariffType      string       `json:"current_tariff_type"`
+	NextTariffCharge       PostingMoney `json:"next_tariff_charge"`
+	NextTariffMinCharge    PostingMoney `json:"next_tariff_min_charge"`
+	NextTariffRate         float64      `json:"next_tariff_rate"`
+	NextTariffStartsAt     time.Time    `json:"next_tariff_starts_at"`
+	NextTariffType         string       `json:"next_tariff_type"`
+}
+
 type FBSPostingOptional struct {
 	// List of products with optional labeling
 	ProductsWithPossibleMandatoryMark []int `json:"products_with_possible_mandatory_mark"`
@@ -790,17 +809,17 @@ type GetFBSShipmentsListV4Params struct {
 }
 
 type GetFBSShipmentsListV4Filter struct {
-	DeliveryMethodIds     []int64                       `json:"delivery_method_ids,omitempty"`
+	DeliveryMethodIds     []string                      `json:"delivery_method_ids,omitempty"`
 	IntegrationTypeFlow   []string                      `json:"integration_type_flow,omitempty"`
 	IsBLRTraceable        bool                          `json:"is_blr_traceable,omitempty"`
 	LastChangedStatusDate *PostingLastChangedStatusDate `json:"last_changed_status_date,omitempty"`
 	OrderId               int64                         `json:"order_id,omitempty"`
 	OrderNumbers          []string                      `json:"order_numbers,omitempty"`
-	ProviderIds           []int64                       `json:"provider_ids,omitempty"`
+	ProviderIds           []string                      `json:"provider_ids,omitempty"`
 	Since                 time.Time                     `json:"since"`
 	Statuses              []string                      `json:"statuses,omitempty"`
 	To                    time.Time                     `json:"to"`
-	WarehouseIds          []int64                       `json:"warehouse_ids,omitempty"`
+	WarehouseIds          []string                      `json:"warehouse_ids,omitempty"`
 }
 
 type GetFBSShipmentsListV4With struct {
@@ -812,9 +831,9 @@ type GetFBSShipmentsListV4With struct {
 
 type GetFBSShipmentsListV4Response struct {
 	core.CommonResponse
-	Cursor   string       `json:"cursor"`
-	HasNext  bool         `json:"has_next"`
-	Postings []FBSPosting `json:"postings"`
+	Cursor   string         `json:"cursor"`
+	HasNext  bool           `json:"has_next"`
+	Postings []FBSPostingV4 `json:"postings"`
 }
 
 // GetFBSShipmentsListV4 returns FBS postings using cursor pagination.
@@ -844,11 +863,11 @@ type ListUnprocessedShipmentsV4Filter struct {
 	CutoffTo              *time.Time                    `json:"cutoff_to,omitempty"`
 	DeliveringDateFrom    *time.Time                    `json:"delivering_date_from,omitempty"`
 	DeliveringDateTo      *time.Time                    `json:"delivering_date_to,omitempty"`
-	DeliveryMethodIds     []int64                       `json:"delivery_method_ids,omitempty"`
+	DeliveryMethodIds     []string                      `json:"delivery_method_ids,omitempty"`
 	LastChangedStatusDate *PostingLastChangedStatusDate `json:"last_changed_status_date,omitempty"`
-	ProviderIds           []int64                       `json:"provider_ids,omitempty"`
+	ProviderIds           []string                      `json:"provider_ids,omitempty"`
 	Statuses              []string                      `json:"statuses,omitempty"`
-	WarehouseIds          []int64                       `json:"warehouse_ids,omitempty"`
+	WarehouseIds          []string                      `json:"warehouse_ids,omitempty"`
 }
 
 type ListUnprocessedShipmentsV4With struct {
@@ -860,10 +879,10 @@ type ListUnprocessedShipmentsV4With struct {
 
 type ListUnprocessedShipmentsV4Response struct {
 	core.CommonResponse
-	Count    int64        `json:"count"`
-	Cursor   string       `json:"cursor"`
-	HasNext  bool         `json:"has_next"`
-	Postings []FBSPosting `json:"postings"`
+	Count    int64          `json:"count"`
+	Cursor   string         `json:"cursor"`
+	HasNext  bool           `json:"has_next"`
+	Postings []FBSPostingV4 `json:"postings"`
 }
 
 // ListUnprocessedShipmentsV4 returns unprocessed FBS postings using cursor pagination.
