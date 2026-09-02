@@ -1,0 +1,67 @@
+package ozon
+
+import (
+	"context"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"time"
+)
+
+func TestGetFBOShipmentsListV3UsesCursorContract(t *testing.T) {
+	t.Parallel()
+
+	since := time.Date(2026, 8, 1, 0, 0, 0, 0, time.UTC)
+	to := time.Date(2026, 8, 2, 0, 0, 0, 0, time.UTC)
+	handler := requestContractHandler(
+		t,
+		http.MethodPost,
+		"/v3/posting/fbo/list",
+		`{"cursor":"next-1","filter":{"order_numbers":["42"],"posting_numbers":["100-1"],"since":"2026-08-01T00:00:00Z","statuses":["delivering"],"to":"2026-08-02T00:00:00Z"},"limit":100,"sort_dir":"ASC","translit":true,"with":{"analytics_data":true,"financial_data":true,"legal_info":true}}`,
+		`{"cursor":"next-2","has_next":true,"postings":[{"order_id":42,"order_number":"42","posting_number":"100-1","status":"delivering","substatus":"posting_on_way_to_city","cancellation":{"cancel_reason":"buyer request"},"external_order":{"is_external":true,"platform_name":"Ozon"},"legal_info":{"company_name":"UCOMS"}}]}`,
+	)
+	server := httptest.NewServer(handler)
+	defer server.Close()
+	client := NewClient(WithURI(server.URL))
+
+	response, err := client.FBO().GetShipmentsListV3(context.Background(), &GetFBOShipmentsListV3Params{
+		Cursor: "next-1",
+		Filter: GetFBOShipmentsListV3Filter{
+			OrderNumbers:   []string{"42"},
+			PostingNumbers: []string{"100-1"},
+			Since:          since,
+			Statuses:       []string{"delivering"},
+			To:             to,
+		},
+		Limit:    100,
+		SortDir:  Order("ASC"),
+		Translit: true,
+		With: &GetFBOShipmentsListV3With{
+			AnalyticsData: true,
+			FinancialData: true,
+			LegalInfo:     true,
+		},
+	})
+	if err != nil {
+		t.Fatalf("GetShipmentsListV3: %v", err)
+	}
+	if response.Cursor != "next-2" || !response.HasNext {
+		t.Fatalf("pagination = (%q, %v), want (%q, true)", response.Cursor, response.HasNext, "next-2")
+	}
+	if len(response.Postings) != 1 {
+		t.Fatalf("postings length = %d, want 1", len(response.Postings))
+	}
+	posting := response.Postings[0]
+	if posting.Substatus != "posting_on_way_to_city" {
+		t.Errorf("substatus = %q", posting.Substatus)
+	}
+	if posting.Cancellation.CancelReason != "buyer request" {
+		t.Errorf("cancel reason = %q", posting.Cancellation.CancelReason)
+	}
+	if !posting.ExternalOrder.IsExternal || posting.ExternalOrder.PlatformName != "Ozon" {
+		t.Errorf("external order = %+v", posting.ExternalOrder)
+	}
+	if posting.LegalInfo.CompanyName != "UCOMS" {
+		t.Errorf("legal company name = %q", posting.LegalInfo.CompanyName)
+	}
+}

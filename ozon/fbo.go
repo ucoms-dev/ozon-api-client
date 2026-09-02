@@ -70,14 +70,23 @@ type GetFBOShipmentsListResult struct {
 	// Shipment cancellation reason identifier
 	CancelReasonId int64 `json:"cancel_reason_id"`
 
+	// Shipment cancellation details
+	Cancellation FBOPostingCancellation `json:"cancellation"`
+
 	// Date and time of shipment creation
 	CreatedAt time.Time `json:"created_at"`
+
+	// Information about an order created on an external platform
+	ExternalOrder PostingExternalOrder `json:"external_order"`
 
 	// Financial data
 	FinancialData FBOFinancialData `json:"financial_data"`
 
 	// Date and time of shipment processing start
 	InProccessAt time.Time `json:"in_process_at"`
+
+	// Buyer legal information
+	LegalInfo PostingLegalInfo `json:"legal_info"`
 
 	// Identifier of the order to which the shipment belongs
 	OrderId int64 `json:"order_id"`
@@ -93,6 +102,9 @@ type GetFBOShipmentsListResult struct {
 
 	// Shipment status
 	Status string `json:"status"`
+
+	// Shipment substatus
+	Substatus string `json:"substatus"`
 }
 
 type GetFBOShipmentsListResultAdditionalData struct {
@@ -159,13 +171,78 @@ type FBOFinancialData struct {
 	Products []FinancialDataProduct `json:"products"`
 }
 
-// Returns a list of shipments for a specified period of time. You can additionally filter the shipments by their status
+// Returns a list of shipments for a specified period of time. You can additionally filter the shipments by their status.
+//
+// Deprecated: Ozon discontinued /v2/posting/fbo/list on August 31, 2026.
+// Use GetShipmentsListV3.
 func (c FBO) GetShipmentsList(ctx context.Context, params *GetFBOShipmentsListParams) (*GetFBOShipmentsListResponse, error) {
 	url := "/v2/posting/fbo/list"
 
 	resp := &GetFBOShipmentsListResponse{}
 
 	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
+
+	return resp, nil
+}
+
+// GetFBOShipmentsListV3Params contains cursor-based filters for the current FBO
+// posting list API.
+type GetFBOShipmentsListV3Params struct {
+	Cursor   string                      `json:"cursor,omitempty"`
+	Filter   GetFBOShipmentsListV3Filter `json:"filter"`
+	Limit    int64                       `json:"limit"`
+	SortDir  Order                       `json:"sort_dir,omitempty"`
+	Translit bool                        `json:"translit,omitempty"`
+	With     *GetFBOShipmentsListV3With  `json:"with,omitempty"`
+}
+
+type GetFBOShipmentsListV3Filter struct {
+	OrderNumbers   []string  `json:"order_numbers,omitempty"`
+	PostingNumbers []string  `json:"posting_numbers,omitempty"`
+	Since          time.Time `json:"since"`
+	Statuses       []string  `json:"statuses,omitempty"`
+	To             time.Time `json:"to"`
+}
+
+type GetFBOShipmentsListV3With struct {
+	AnalyticsData bool `json:"analytics_data,omitempty"`
+	FinancialData bool `json:"financial_data,omitempty"`
+	LegalInfo     bool `json:"legal_info,omitempty"`
+}
+
+type GetFBOShipmentsListV3Response struct {
+	core.CommonResponse
+	Cursor   string                      `json:"cursor"`
+	HasNext  bool                        `json:"has_next"`
+	Postings []GetFBOShipmentsListResult `json:"postings"`
+}
+
+type FBOPostingCancellation struct {
+	CancelReason          string `json:"cancel_reason"`
+	CancellationInitiator string `json:"cancellation_initiator"`
+	CancellationType      string `json:"cancellation_type"`
+}
+
+type PostingExternalOrder struct {
+	IsExternal   bool   `json:"is_external"`
+	PlatformName string `json:"platform_name"`
+}
+
+type PostingLegalInfo struct {
+	CompanyName string `json:"company_name"`
+	INN         string `json:"inn"`
+	KPP         string `json:"kpp"`
+}
+
+// GetShipmentsListV3 returns FBO postings using cursor pagination.
+func (c FBO) GetShipmentsListV3(ctx context.Context, params *GetFBOShipmentsListV3Params) (*GetFBOShipmentsListV3Response, error) {
+	resp := &GetFBOShipmentsListV3Response{}
+
+	response, err := c.client.Request(ctx, http.MethodPost, "/v3/posting/fbo/list", params, resp, nil)
 	if err != nil {
 		return nil, err
 	}
