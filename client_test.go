@@ -74,3 +74,16 @@ func TestRequest(t *testing.T) {
 		}
 	}
 }
+
+func TestRequestAcceptsEmptySuccessfulResponseBody(t *testing.T) {
+	t.Parallel()
+
+	client := NewMockClient(NewMockHttpHandler(http.StatusOK, "", nil))
+	response, err := client.Request(context.Background(), http.MethodPost, "/v2/no-content", nil, &struct{}{}, nil)
+	if err != nil {
+		t.Fatalf("Request: %v", err)
+	}
+	if response.StatusCode != http.StatusOK {
+		t.Fatalf("status code = %d, want %d", response.StatusCode, http.StatusOK)
+	}
+}

@@ -1,8 +1,7 @@
 # Ozon Seller API Client
-A Ozon Seller API client written in Golang
+A Ozon Seller API client written in Go, maintained by UCOMS.
 
-[![Coverage Status](https://coveralls.io/repos/github/diPhantxm/ozon-api-client/badge.svg)](https://coveralls.io/github/diPhantxm/ozon-api-client)
-![example workflow](https://github.com/diPhantxm/ozon-api-client/actions/workflows/tests.yml/badge.svg)
+![example workflow](https://github.com/ucoms-dev/ozon-api-client/actions/workflows/tests.yml/badge.svg)
 
 [Ozon](https://ozon.ru) is a marketplace for small and medium enterprises to launch and grow their businesses in Russia.
 
@@ -14,7 +13,7 @@ Get Client-Id and Api-Key in your seller profile [here](https://seller.ozon.ru/a
 
 Just add dependency to your project and you're ready to go.
 ```bash
-go get github.com/diphantxm/ozon-api-client
+go get github.com/ucoms-dev/ozon-api-client
 ```
 A simple example on how to use this library:
 ```Golang
@@ -26,7 +25,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/diphantxm/ozon-api-client/ozon"
+	"github.com/ucoms-dev/ozon-api-client/ozon"
 )
 
 func main() {
@@ -39,7 +38,7 @@ func main() {
 	c := ozon.NewClient(opts...)
 
 	// Send request with parameters
-	resp, err := client.Products().GetProductDetails(context.Background(), &ozon.GetProductDetailsParams{
+	resp, err := c.Products().GetProductDetails(context.Background(), &ozon.GetProductDetailsParams{
 		ProductId: 123456789,
 	})
 	if err != nil || resp.StatusCode != http.StatusOK {
@@ -65,7 +64,7 @@ package main
 import (
 	"log"
 
-	"github.com/diphantxm/ozon-api-client/ozon/notifications"
+	"github.com/ucoms-dev/ozon-api-client/ozon/notifications"
 )
 
 func main() {
@@ -89,3 +88,27 @@ func main() {
 	}
 }
 ```
+
+## API contract audit
+
+The repository includes a deterministic audit tool that compares the HTTP
+method/path pairs used by the Go client with an Ozon OpenAPI JSON document:
+
+```bash
+go run ./cmd/contract-audit \
+  -swagger /path/to/swagger.json \
+  -client ozon \
+  -date YYYY-MM-DD \
+  -output docs/ozon-seller-api-contract-audit-YYYY-MM-DD.md
+```
+
+The generated report records the source document SHA-256, exact matches,
+client-only endpoints, method mismatches, deprecated endpoints, and operations
+that are not implemented by the client. The current audited snapshot is in
+[`docs/ozon-seller-api-contract-audit-2026-09-02.md`](docs/ozon-seller-api-contract-audit-2026-09-02.md).
+The reviewed compatibility decisions and implementation order are in
+[`docs/ozon-seller-api-contract-plan-2026-09-02.md`](docs/ozon-seller-api-contract-plan-2026-09-02.md).
+
+Deprecated exported methods remain available throughout the v1 release line for
+source compatibility. New code should use the replacement named in each Go doc
+comment. Removing those methods is reserved for a future major version.

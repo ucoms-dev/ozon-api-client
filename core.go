@@ -40,6 +40,9 @@ func getDefaultValues(v reflect.Value) error {
 
 	for i := 0; i < vType.NumField(); i++ {
 		field := vType.Field(i)
+		if field.PkgPath != "" {
+			continue
+		}
 
 		switch field.Type.Kind() {
 		case reflect.Slice:

@@ -2819,7 +2819,9 @@ type GenerateActResponse struct {
 	Status string `json:"status"`
 }
 
-// Get current status of generating digital acceptance and transfer certificate and waybill
+// Get current status of generating digital acceptance and transfer certificate and waybill.
+//
+// Deprecated: Ozon discontinued this endpoint on March 22, 2026. Use StatusOfAct.
 func (c FBS) GenerateAct(ctx context.Context, params *GenerateActParams) (*GenerateActResponse, error) {
 	url := "/v2/posting/fbs/digital/act/check-status"
 
@@ -2858,7 +2860,9 @@ type GetDigitalActResponse struct {
 	Type string `json:"content_type"`
 }
 
-// Specify the type of a certificate in the doc_type parameter: `act_of_acceptance`, `act_of_mismatch`, `act_of_excess`
+// Specify the type of a certificate in the doc_type parameter: `act_of_acceptance`, `act_of_mismatch`, `act_of_excess`.
+//
+// Deprecated: Ozon discontinued this endpoint on March 22, 2026. Use GetActPDF.
 func (c FBS) GetDigitalAct(ctx context.Context, params *GetDigitalActParams) (*GetDigitalActResponse, error) {
 	url := "/v2/posting/fbs/digital/act/get-pdf"
 
