@@ -272,9 +272,14 @@ type FBSPostingTarifficationStep struct {
 type FBSPostingV4 struct {
 	FBSPosting
 	FinancialData FBSFinancialDataV4        `json:"financial_data"`
+	Optional      FBSPostingV4Optional      `json:"optional"`
 	Products      []FBSPostingV4Product     `json:"products"`
 	Requirements  FBSPostingV4Requirements  `json:"requirements"`
 	Tariffication FBSPostingV4Tariffication `json:"tariffication"`
+}
+
+type FBSPostingV4Optional struct {
+	ProductsWithPossibleMandatoryMark []string `json:"products_with_possible_mandatory_mark"`
 }
 
 type FBSPostingV4Product struct {
