@@ -136,7 +136,7 @@ func TestGetFBSShipmentsListV4PreservesV116ResponseContract(t *testing.T) {
 		http.MethodPost,
 		"/v4/posting/fbs/list",
 		`{"filter":{"since":"0001-01-01T00:00:00Z","to":"0001-01-01T00:00:00Z"},"limit":1}`,
-		`{"postings":[{"posting_number":"100-1","financial_data":{"products":[{"commission":{"amount":23.4,"currency":"RUB","percent":10},"customer_price":{"amount":"234.56","currency":"RUB"},"product_id":456}]},"optional":{"products_with_possible_mandatory_mark":["456"]},"products":[{"offer_id":"offer-1","price":{"amount":"234.56","currency":"RUB"},"sku":456}],"requirements":{"products_requiring_gtd":["456"]},"tariffication":{"current_tariff_charge":{"amount":"12.50","currency":"RUB"}}}]}`,
+		`{"cursor":"next","has_next":true,"postings":[{"posting_number":"100-1","financial_data":{"products":[{"commission":{"amount":23.4,"currency":"RUB","percent":10},"customer_price":{"amount":"234.56","currency":"RUB"},"product_id":456}]},"optional":{"products_with_possible_mandatory_mark":["456"]},"products":[{"offer_id":"offer-1","price":{"amount":"234.56","currency":"RUB"},"sku":456}],"requirements":{"products_requiring_country":["456"],"products_requiring_gtd":["457"],"products_requiring_mandatory_mark":["458"],"products_requiring_rnpt":["459"]},"tariffication":{"current_tariff_charge":{"amount":"12.50","currency":"RUB"}}}]}`,
 	)
 	server := httptest.NewServer(handler)
 	defer server.Close()
@@ -144,6 +144,9 @@ func TestGetFBSShipmentsListV4PreservesV116ResponseContract(t *testing.T) {
 	response, err := NewClient(WithURI(server.URL)).FBS().GetFBSShipmentsListV4(context.Background(), &GetFBSShipmentsListV4Params{Limit: 1})
 	if err != nil {
 		t.Fatalf("GetFBSShipmentsListV4: %v", err)
+	}
+	if response.Cursor != "next" || !response.HasNext || response.StatusCode != http.StatusOK {
+		t.Fatalf("legacy response metadata = cursor %q, has_next %v, status %d", response.Cursor, response.HasNext, response.StatusCode)
 	}
 	var _ []FBSPostingV4 = response.Postings
 	posting := response.Postings[0]
@@ -153,11 +156,55 @@ func TestGetFBSShipmentsListV4PreservesV116ResponseContract(t *testing.T) {
 	if posting.FinancialData.Products[0].ClientPrice != "234.56" || posting.FinancialData.Products[0].CommissionAmount != 23.4 {
 		t.Fatalf("legacy financial data was not adapted: %+v", posting.FinancialData.Products[0])
 	}
-	if posting.Requirements.ProductsRequiringGTD[0] != 456 || posting.Optional.ProductsWithPossibleMandatoryMark[0] != 456 {
+	if posting.Requirements.ProductsRequiringCountry[0] != 456 || posting.Requirements.ProductsRequiringGTD[0] != 457 || posting.Requirements.ProductsRequiringMandatoryMark[0] != 458 || posting.Requirements.ProductsRequiringRNPT[0] != 459 || posting.Optional.ProductsWithPossibleMandatoryMark[0] != 456 {
 		t.Fatalf("legacy product IDs were not adapted: requirements=%+v optional=%+v", posting.Requirements, posting.Optional)
 	}
 	if posting.Tariffication.CurrentTariffCharge.Amount != "12.50" {
 		t.Fatalf("legacy v4 tariffication was not preserved: %+v", posting.Tariffication)
+	}
+}
+
+func TestListUnprocessedShipmentsV4PreservesV116ResponseContract(t *testing.T) {
+	t.Parallel()
+
+	handler := requestContractHandler(
+		t,
+		http.MethodPost,
+		"/v4/posting/fbs/unfulfilled/list",
+		`{"filter":{},"limit":1}`,
+		`{"count":1,"cursor":"next","has_next":true,"postings":[{"posting_number":"100-1","products":[{"price":{"amount":"10.00","currency":"RUB"},"sku":1}]}]}`,
+	)
+	server := httptest.NewServer(handler)
+	defer server.Close()
+
+	response, err := NewClient(WithURI(server.URL)).FBS().ListUnprocessedShipmentsV4(context.Background(), &ListUnprocessedShipmentsV4Params{Limit: 1})
+	if err != nil {
+		t.Fatalf("ListUnprocessedShipmentsV4: %v", err)
+	}
+	if response.Count != 1 || response.Cursor != "next" || !response.HasNext || response.StatusCode != http.StatusOK {
+		t.Fatalf("legacy unfulfilled metadata = count %d, cursor %q, has_next %v, status %d", response.Count, response.Cursor, response.HasNext, response.StatusCode)
+	}
+	if response.Postings[0].Products[0].Price != "10.00" || response.Postings[0].Products[0].CurrencyCode != "RUB" {
+		t.Fatalf("legacy unfulfilled product was not adapted: %+v", response.Postings[0].Products[0])
+	}
+}
+
+func TestListUnprocessedShipmentsV4PropagatesAdapterErrors(t *testing.T) {
+	t.Parallel()
+
+	handler := requestContractHandler(
+		t,
+		http.MethodPost,
+		"/v4/posting/fbs/unfulfilled/list",
+		`{"filter":{},"limit":1}`,
+		`{"postings":[{"posting_number":"100-1","requirements":{"products_requiring_gtd":["not-a-number"]}}]}`,
+	)
+	server := httptest.NewServer(handler)
+	defer server.Close()
+
+	_, err := NewClient(WithURI(server.URL)).FBS().ListUnprocessedShipmentsV4(context.Background(), &ListUnprocessedShipmentsV4Params{Limit: 1})
+	if err == nil {
+		t.Fatal("ListUnprocessedShipmentsV4 accepted a non-numeric legacy product ID")
 	}
 }
 

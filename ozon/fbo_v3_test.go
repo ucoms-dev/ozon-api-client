@@ -92,6 +92,9 @@ func TestGetFBOShipmentsListV3PreservesV116ResponseContract(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GetShipmentsListV3: %v", err)
 	}
+	if response.Cursor != "next" || !response.HasNext || response.StatusCode != http.StatusOK {
+		t.Fatalf("legacy response metadata = cursor %q, has_next %v, status %d", response.Cursor, response.HasNext, response.StatusCode)
+	}
 	var _ []GetFBOShipmentsListResult = response.Postings
 	posting := response.Postings[0]
 	if posting.Products[0].Price != "123.45" || posting.Products[0].CurrencyCode != "RUB" {
