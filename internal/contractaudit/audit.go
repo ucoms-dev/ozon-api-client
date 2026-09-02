@@ -46,6 +46,12 @@ type Metadata struct {
 	GeneratedDate string
 }
 
+type stringAssignment struct {
+	Name       string
+	Expression ast.Expr
+	Position   token.Pos
+}
+
 func WriteMarkdown(writer io.Writer, report Report, metadata Metadata) error {
 	clientOperations := len(report.Exact) + len(report.ClientOnly) + len(report.MethodMismatches)
 	swaggerOperations := len(report.Exact) + len(report.SpecOnly)
@@ -54,9 +60,6 @@ func WriteMarkdown(writer io.Writer, report Report, metadata Metadata) error {
 		if !operation.GoDeprecated {
 			undocumentedDeprecated++
 		}
-	}
-	for _, mismatch := range report.MethodMismatches {
-		swaggerOperations += len(mismatch.SpecMethods)
 	}
 
 	if _, err := fmt.Fprintf(writer, `# Ozon Seller API contract audit
@@ -184,16 +187,22 @@ func LoadClientOperations(root string) ([]Operation, error) {
 			if !ok || function.Body == nil {
 				continue
 			}
-			stringValues := collectStringValues(function.Body)
+			stringAssignments := collectStringAssignments(function.Body)
 			goDeprecated := function.Doc != nil && strings.Contains(function.Doc.Text(), "Deprecated:")
+			var unresolvedErr error
 			ast.Inspect(function.Body, func(node ast.Node) bool {
+				if unresolvedErr != nil {
+					return false
+				}
 				call, ok := node.(*ast.CallExpr)
 				if !ok || !isRequestCall(call.Fun) {
 					return true
 				}
-				method, path := requestMethodAndPath(call.Args, stringValues)
+				method, path := requestMethodAndPath(call.Args, stringValuesBefore(stringAssignments, call.Pos()))
 				if method == "" || path == "" {
-					return true
+					position := fileSet.Position(call.Pos())
+					unresolvedErr = fmt.Errorf("%s:%d: %s: unresolved Request call", filepath.ToSlash(relativePath), position.Line, function.Name.Name)
+					return false
 				}
 				key := method + " " + path
 				if existing, exists := operationByKey[key]; !exists {
@@ -212,6 +221,9 @@ func LoadClientOperations(root string) ([]Operation, error) {
 				}
 				return true
 			})
+			if unresolvedErr != nil {
+				return unresolvedErr
+			}
 		}
 		return nil
 	})
@@ -250,11 +262,9 @@ func Compare(client, spec []Operation) Report {
 		sort.Strings(specMethodsByPath[path])
 	}
 
-	clientPaths := make(map[string]struct{})
 	matchedSpec := make(map[string]struct{})
 	var report Report
 	for _, operation := range client {
-		clientPaths[operation.Path] = struct{}{}
 		key := operation.Method + " " + operation.Path
 		if specOperation, exists := specByKey[key]; exists {
 			operation.OperationID = specOperation.OperationID
@@ -282,9 +292,6 @@ func Compare(client, spec []Operation) Report {
 		if _, matched := matchedSpec[operation.Method+" "+operation.Path]; matched {
 			continue
 		}
-		if _, clientPathExists := clientPaths[operation.Path]; clientPathExists {
-			continue
-		}
 		report.SpecOnly = append(report.SpecOnly, operation)
 	}
 
@@ -301,8 +308,8 @@ func Compare(client, spec []Operation) Report {
 	return report
 }
 
-func collectStringValues(body *ast.BlockStmt) map[string]string {
-	values := make(map[string]string)
+func collectStringAssignments(body *ast.BlockStmt) []stringAssignment {
+	var assignments []stringAssignment
 	ast.Inspect(body, func(node ast.Node) bool {
 		switch statement := node.(type) {
 		case *ast.AssignStmt:
@@ -314,22 +321,45 @@ func collectStringValues(body *ast.BlockStmt) map[string]string {
 				if !ok {
 					continue
 				}
-				if value := stringLiteral(statement.Rhs[i], nil); value != "" {
-					values[identifier.Name] = value
-				}
+				assignments = append(assignments, stringAssignment{
+					Name:       identifier.Name,
+					Expression: statement.Rhs[i],
+					Position:   statement.Pos(),
+				})
 			}
 		case *ast.ValueSpec:
 			for i, name := range statement.Names {
 				if i >= len(statement.Values) {
 					continue
 				}
-				if value := stringLiteral(statement.Values[i], nil); value != "" {
-					values[name.Name] = value
-				}
+				assignments = append(assignments, stringAssignment{
+					Name:       name.Name,
+					Expression: statement.Values[i],
+					Position:   statement.Pos(),
+				})
 			}
 		}
 		return true
 	})
+	sort.Slice(assignments, func(i, j int) bool {
+		return assignments[i].Position < assignments[j].Position
+	})
+	return assignments
+}
+
+func stringValuesBefore(assignments []stringAssignment, position token.Pos) map[string]string {
+	values := make(map[string]string)
+	for _, assignment := range assignments {
+		if assignment.Position >= position {
+			break
+		}
+		value := stringLiteral(assignment.Expression, values)
+		if value == "" {
+			delete(values, assignment.Name)
+			continue
+		}
+		values[assignment.Name] = value
+	}
 	return values
 }
 

@@ -61,11 +61,30 @@ func wrongVerb(ctx context.Context) {
 	if len(report.ClientOnly) != 1 || report.ClientOnly[0].Path != "/v1/legacy" {
 		t.Fatalf("client only = %+v", report.ClientOnly)
 	}
-	if len(report.SpecOnly) != 1 || report.SpecOnly[0].Path != "/v1/spec-only" {
+	if len(report.SpecOnly) != 2 || report.SpecOnly[0].Path != "/v1/spec-only" || report.SpecOnly[1].Path != "/v1/verb" {
 		t.Fatalf("spec only = %+v", report.SpecOnly)
 	}
 	if len(report.MethodMismatches) != 1 || report.MethodMismatches[0].Path != "/v1/verb" || report.MethodMismatches[0].ClientMethod != "POST" || report.MethodMismatches[0].SpecMethods[0] != "GET" {
 		t.Fatalf("method mismatches = %+v", report.MethodMismatches)
+	}
+}
+
+func TestCompareKeepsUnimplementedVerbOnPartiallyImplementedPath(t *testing.T) {
+	t.Parallel()
+
+	report := Compare(
+		[]Operation{{Method: "GET", Path: "/v1/resource", GoName: "GetResource"}},
+		[]Operation{
+			{Method: "GET", Path: "/v1/resource", OperationID: "GetResource"},
+			{Method: "POST", Path: "/v1/resource", OperationID: "CreateResource"},
+		},
+	)
+
+	if len(report.Exact) != 1 || len(report.SpecOnly) != 1 {
+		t.Fatalf("report = %+v", report)
+	}
+	if report.SpecOnly[0].Method != "POST" || report.SpecOnly[0].OperationID != "CreateResource" {
+		t.Fatalf("spec only = %+v", report.SpecOnly)
 	}
 }
 
@@ -129,6 +148,50 @@ func Current() { Request(http.MethodPost, "/v2/current") }
 	}
 }
 
+func TestLoadClientOperationsResolvesReassignedURLAtEachCall(t *testing.T) {
+	t.Parallel()
+
+	sourceDir := t.TempDir()
+	source := `package fixture
+import "net/http"
+func TwoCalls() {
+	url := "/v1/one"
+	Request(http.MethodPost, url)
+	url = "/v1/two"
+	Request(http.MethodPost, url)
+}
+`
+	if err := os.WriteFile(filepath.Join(sourceDir, "fixture.go"), []byte(source), 0o600); err != nil {
+		t.Fatalf("write Go fixture: %v", err)
+	}
+
+	operations, err := LoadClientOperations(sourceDir)
+	if err != nil {
+		t.Fatalf("LoadClientOperations: %v", err)
+	}
+	if len(operations) != 2 || operations[0].Path != "/v1/one" || operations[1].Path != "/v1/two" {
+		t.Fatalf("operations = %+v", operations)
+	}
+}
+
+func TestLoadClientOperationsFailsOnUnresolvedRequest(t *testing.T) {
+	t.Parallel()
+
+	sourceDir := t.TempDir()
+	source := `package fixture
+import "net/http"
+func Dynamic(path string) { Request(http.MethodPost, path) }
+`
+	if err := os.WriteFile(filepath.Join(sourceDir, "fixture.go"), []byte(source), 0o600); err != nil {
+		t.Fatalf("write Go fixture: %v", err)
+	}
+
+	_, err := LoadClientOperations(sourceDir)
+	if err == nil || !strings.Contains(err.Error(), "unresolved Request call") {
+		t.Fatalf("error = %v, want unresolved Request call", err)
+	}
+}
+
 func TestWriteMarkdownRendersDeterministicActionableSections(t *testing.T) {
 	t.Parallel()
 
@@ -136,7 +199,10 @@ func TestWriteMarkdownRendersDeterministicActionableSections(t *testing.T) {
 		Exact:           []Operation{{Method: "POST", Path: "/v1/current", GoName: "Current", File: "current.go"}},
 		DeprecatedExact: []Operation{{Method: "POST", Path: "/v1/current", OperationID: "CurrentAPI", Deprecated: true, GoName: "Current", File: "current.go"}},
 		ClientOnly:      []Operation{{Method: "POST", Path: "/v1/legacy", GoName: "Legacy", File: "legacy.go"}},
-		SpecOnly:        []Operation{{Method: "GET", Path: "/v1/missing", OperationID: "MissingAPI"}},
+		SpecOnly: []Operation{
+			{Method: "GET", Path: "/v1/missing", OperationID: "MissingAPI"},
+			{Method: "GET", Path: "/v1/verb", OperationID: "VerbAPI"},
+		},
 		MethodMismatches: []MethodMismatch{{
 			Path: "/v1/verb", ClientMethod: "POST", SpecMethods: []string{"GET"}, GoName: "WrongVerb", File: "verb.go",
 		}},
@@ -160,7 +226,7 @@ func TestWriteMarkdownRendersDeterministicActionableSections(t *testing.T) {
 - Exact method/path matches: 1
 - Client-only paths: 1
 - Method mismatches: 1
-- Swagger-only operations: 1
+- Swagger-only operations: 2
 - Deprecated exact matches: 1
 - Deprecated matches missing Go doc: 1
 
@@ -187,6 +253,7 @@ func TestWriteMarkdownRendersDeterministicActionableSections(t *testing.T) {
 | Method | Path | Operation ID |
 |---|---|---|
 | GET | ` + "`/v1/missing`" + ` | ` + "`MissingAPI`" + ` |
+| GET | ` + "`/v1/verb`" + ` | ` + "`VerbAPI`" + ` |
 `
 	if output.String() != want {
 		t.Fatalf("markdown output:\n%s\nwant:\n%s", output.String(), want)
