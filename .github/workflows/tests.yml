@@ -2,21 +2,36 @@ name: tests
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "dev" ]
 
 jobs:
 
   unit:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [ "1.20.x", "1.x" ]
+    name: Unit tests and promotions vet (Go ${{ matrix.go-version }})
     steps:
-    
+
     - name: Check out code
       uses: actions/checkout@v3
 
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        # setup-go@v2 uses semver ranges with the stable filter; it has no stable version alias.
+        go-version: ${{ matrix.go-version }}
+        check-latest: true
+        stable: true
+
     - name: Unit Tests
       run: go test -v ./...
+
+    - name: Promotions and contract audit vet
+      run: bash scripts/vet-promotions.sh
 
   coverage:
     runs-on: ubuntu-latest

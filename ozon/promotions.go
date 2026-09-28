@@ -38,6 +38,9 @@ type GetAvailablePromotionsResult struct {
 	// Promotion end date
 	DateEnd string `json:"date_end"`
 
+	// Available schedules for the auto-add methods. An absent field means no schedule was returned.
+	AutoAddDates []time.Time `json:"auto_add_dates,omitempty"`
+
 	// Promotion freeze date.
 	//
 	// If the field is filled, the seller can't increase prices, change the list of products, or decrease the number of product units in the promotion.
@@ -131,6 +134,8 @@ type AddProductToPromotionResultRejected struct {
 }
 
 // A method for adding products to an available promotion
+//
+// Deprecated: Use UpdateProducts. Ozon disables this endpoint on 13 October 2026.
 func (c Promotions) AddToPromotion(ctx context.Context, params *AddProductToPromotionParams) (*AddProductToPromotionResponse, error) {
 	url := "/v1/actions/products/activate"
 
@@ -196,6 +201,8 @@ type PromotionProduct struct {
 }
 
 // A method for getting a list of products that can participate in the promotion by the promotion identifier
+//
+// Deprecated: Use ProductsAvailableForPromotionV2. Ozon disables this endpoint on 13 October 2026.
 func (c Promotions) ProductsAvailableForPromotion(ctx context.Context, params *ProductsAvailableForPromotionParams) (*ProductsAvailableForPromotionResponse, error) {
 	url := "/v1/actions/candidates"
 
@@ -237,6 +244,8 @@ type ProductsInPromotionResult struct {
 }
 
 // A method for getting the list of products participating in the promotion by its identifier
+//
+// Deprecated: Use ProductsInPromotionV2. Ozon disables this endpoint on 13 October 2026.
 func (c Promotions) ProductsInPromotion(ctx context.Context, params *ProductsInPromotionParams) (*ProductsInPromotionResponse, error) {
 	url := "/v1/actions/products"
 
@@ -283,6 +292,9 @@ type RemoveProductFromPromotionResultRejected struct {
 }
 
 // A method for removing products from the promotion
+//
+// Deprecated: Use RemoveProductV2 for promo-code actions, or UpdateProducts for price-based participation.
+// Ozon disables this endpoint on 13 October 2026.
 func (c Promotions) RemoveProduct(ctx context.Context, params *RemoveProductFromPromotionParams) (*RemoveProductFromPromotionResponse, error) {
 	url := "/v1/actions/products/deactivate"
 

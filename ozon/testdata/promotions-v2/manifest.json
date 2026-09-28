@@ -1,0 +1,9 @@
+{
+  "payload_fixture_classification": "synthetic-spec",
+  "payload_fixture_source": "docs/superpowers/specs/2026-09-28-ozon-promotions-sdk-design.md",
+  "source_date": "2026-09-28",
+  "live_response_verified": false,
+  "scope_excludes": {
+    "swagger-shapes.json": "Official OpenAPI normalized extract; see file for its source and retrieval date."
+  }
+}

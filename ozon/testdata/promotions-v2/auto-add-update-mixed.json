@@ -1,0 +1,9 @@
+{
+  "product_ids": ["9007199254740993", 18],
+  "deactivated_ids": [19],
+  "rejected": [{"product_id": 19, "reason": "price rejected"}],
+  "warnings": [{"product_id": 18, "reason": "check schedule"}],
+  "below_min_price": [{"key": 9007199254740993, "value": 12.34567890123456789}],
+  "extremely_low_price": [{"key": 18, "value": 0.0000000000000000123}],
+  "failed_price": [{"key": 19, "value": 99999999999999999999.999999999}]
+}

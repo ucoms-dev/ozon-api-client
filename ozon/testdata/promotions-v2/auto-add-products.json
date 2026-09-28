@@ -1,0 +1,33 @@
+{
+  "products": [
+    {
+      "product_id": "9007199254740993",
+      "price": {"amount": "12345678901234567890.123456789", "currency": "RUB"},
+      "base_price": {"amount": "13000000000000000000.000000001", "currency": "RUB"},
+      "max_discount_price": {"amount": "10000000000000000000.50", "currency": "RUB"},
+      "action_price_to_auto_add": {"amount": "11000000000000000000.25", "currency": "RUB"},
+      "marketplace_seller_price": {"amount": "11999999999999999999.99", "currency": "RUB"},
+      "min_seller_price": {"amount": "10500000000000000000.01", "currency": "RUB"},
+      "currency": "RUB",
+      "offer_id": "offer-auto-add-1",
+      "sku": 1234567,
+      "name": "Auto-add product",
+      "min_action_quantity": 4,
+      "quantity_to_auto_add": 8,
+      "has_expired_min_seller_price": false,
+      "will_be_quarantined": true,
+      "add_mode": true,
+      "website_prices": {
+        "price": {"amount": "11000000000000000000.25", "currency": "RUB"},
+        "prices_by_schema": {
+          "fbs": {
+            "black_price": {"amount": "12000000000000000000.00", "currency": "RUB"},
+            "green_price": null
+          }
+        }
+      }
+    }
+  ],
+  "total": 1,
+  "future_field": "accepted by forward-compatible decoder"
+}

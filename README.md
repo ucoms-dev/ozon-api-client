@@ -89,6 +89,14 @@ func main() {
 }
 ```
 
+## Promotion method updates
+
+The Seller API promotion update adds eight methods under **Promotions** for candidates, participants, immediate updates, removal, and scheduled auto-add. The existing methods remain source-compatible while Ozon transitions the corresponding endpoints. The old and new request/response contracts are not interchangeable, and the SDK does not switch routes based on local time.
+
+See the [migration guide](docs/ozon-promotions-migration.md) for consumer changes and the [2026-09-28 contract matrix](docs/ozon-promotions-contracts-2026-09-28.md) for operation fields, source links, validation rules, and documented schema discrepancies.
+
+The [verification report](docs/ozon-promotions-verification-2026-09-28.md) records local checks, consumer compilation, and the existing full-repository vet limitations.
+
 ## API contract audit
 
 The repository includes a deterministic audit tool that compares the HTTP

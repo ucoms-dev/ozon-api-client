@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": "18446744073709551615",
+      "price": {"amount": "0.00", "currency": "KZT"},
+      "action_price": {"amount": "0", "currency": "KZT"},
+      "max_action_price": {"amount": "0.01", "currency": "KZT"},
+      "min_stock": 0,
+      "recommended_stock": 1,
+      "marketplace_seller_price": {"amount": "0.00", "currency": "KZT"},
+      "alert_max_action_price_failed": false,
+      "alert_max_action_price": {"amount": "0.01", "currency": "KZT"},
+      "current_boost": 0,
+      "price_min_elastic": {"amount": "9.99", "currency": "KZT"},
+      "price_max_elastic": {"amount": "10.01", "currency": "KZT"},
+      "min_boost": 0,
+      "max_boost": 1,
+      "website_prices": {
+        "price": {"amount": "0.00", "currency": "KZT"},
+        "prices_by_schema": {}
+      },
+      "min_seller_price": {"amount": "0.00", "currency": "KZT"},
+      "is_quarantined": false
+    }
+  ],
+  "total": 1,
+  "last_id": "candidate-next"
+}

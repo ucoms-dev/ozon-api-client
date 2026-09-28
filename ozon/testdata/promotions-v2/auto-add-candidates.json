@@ -1,0 +1,24 @@
+{
+  "products": [
+    {
+      "id": "18446744073709551615",
+      "price": {"amount": "99999999999999999999.123456789", "currency": "RUB"},
+      "base_price": null,
+      "max_discount_price": {"amount": "80000000000000000000.01", "currency": "RUB"},
+      "action_price_to_auto_add": null,
+      "marketplace_seller_price": null,
+      "min_seller_price": null,
+      "currency": "RUB",
+      "offer_id": "offer-auto-candidate-1",
+      "sku": 7654321,
+      "name": "Auto-add candidate",
+      "min_action_quantity": 1,
+      "quantity_to_auto_add": 2,
+      "has_expired_min_seller_price": false,
+      "will_be_quarantined": false,
+      "is_manually_added": false,
+      "website_prices": null
+    }
+  ],
+  "total": 1
+}
