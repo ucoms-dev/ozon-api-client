@@ -1,0 +1,26 @@
+{
+  "source": "https://docs.ozon.ru/api/seller/swagger.json?1790601089484",
+  "observed_at": "2026-09-28T13:11:45Z",
+  "provenance": "Normalized field/type extract from the official OpenAPI 3.0.0 loaded by the documentation page. Descriptions, examples and ref names omitted; this is not the complete Swagger or a live Seller API response.",
+  "shapes": {
+    "PromotionMoney": {"amount":"string","currency":"string"},
+    "PromotionIssue": {"product_id":"uint64","reason":"string"},
+    "PromotionPriceValidation": {"key":"uint64","value":"number"},
+    "PromotionWebsitePrices": {"price":"object","prices_by_schema":"object"},
+    "PromotionSchemaPrices": {"black_price":"object","green_price":"object"},
+    "PromotionParticipantV2": {"id":"uint64","price":"object","action_price":"object","max_action_price":"object","add_mode":"string","stock":"uint64","min_stock":"uint64","recommended_stock":"uint64","marketplace_seller_price":"object","alert_max_action_price_failed":"boolean","alert_max_action_price":"object","current_boost":"number","price_min_elastic":"object","price_max_elastic":"object","min_boost":"number","max_boost":"number","website_prices":"object","min_seller_price":"object","is_quarantined":"boolean"},
+    "PromotionCandidateV2": {"id":"uint64","price":"object","action_price":"object","max_action_price":"object","min_stock":"uint64","recommended_stock":"uint64","marketplace_seller_price":"object","alert_max_action_price_failed":"boolean","alert_max_action_price":"object","current_boost":"number","price_min_elastic":"object","price_max_elastic":"object","min_boost":"number","max_boost":"number","website_prices":"object","min_seller_price":"object","is_quarantined":"boolean"},
+    "AutoAddProductV2": {"product_id":"uint64","offer_id":"string","sku":"uint64","name":"string","price":"object","base_price":"object","max_discount_price":"object","action_price_to_auto_add":"object","marketplace_seller_price":"object","min_seller_price":"object","min_action_quantity":"uint64","quantity_to_auto_add":"uint64","currency":"string","add_mode":"boolean","has_expired_min_seller_price":"boolean","website_prices":"object","will_be_quarantined":"boolean"},
+    "AutoAddCandidateV2": {"id":"uint64","offer_id":"string","sku":"uint64","name":"string","price":"object","base_price":"object","max_discount_price":"object","action_price_to_auto_add":"object","marketplace_seller_price":"object","min_seller_price":"object","min_action_quantity":"uint64","quantity_to_auto_add":"uint64","currency":"string","is_manually_added":"boolean","has_expired_min_seller_price":"boolean","website_prices":"object","will_be_quarantined":"boolean"},
+    "ProductsInPromotionV2Response": {"products":"array","total":"uint64","last_id":"string"},
+    "ProductsAvailableForPromotionV2Response": {"products":"array","total":"uint64","last_id":"string"},
+    "UpdatePromotionProductsResponse": {"active_product_ids":"array","deactivated_product_ids":"array","rejected":"array","warnings":"array"},
+    "RemoveProductFromPromotionV2Response": {"product_ids":"array"},
+    "ListAutoAddProductsV2Response": {"products":"array","total":"uint64"},
+    "ListAutoAddCandidatesV2Response": {"products":"array","total":"uint64"},
+    "UpdateAutoAddProductsV2Response": {"product_ids":"array","deactivated_ids":"array","rejected":"array","warnings":"array","below_min_price":"array","extremely_low_price":"array","failed_price":"array"},
+    "DeleteAutoAddProductsV2Response": {"product_ids":"array"},
+    "UpdatePromotionProduct": {"product_id":"uint64","action_price":"object","stock":"uint64"},
+    "UpdateAutoAddProductV2": {"id":"uint64","action_price":"object","stock":"uint64"}
+  }
+}

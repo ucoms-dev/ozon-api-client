@@ -1,0 +1,6 @@
+{
+  "active_product_ids": [1],
+  "deactivated_product_ids": [2],
+  "rejected": [{"product_id": 3, "reason": "not eligible"}],
+  "warnings": [{"product_id": 2, "reason": "stock is not used for this action type"}]
+}
