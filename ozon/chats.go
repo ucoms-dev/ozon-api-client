@@ -1,8 +1,12 @@
 package ozon
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	core "github.com/ucoms-dev/ozon-api-client"
@@ -76,7 +80,9 @@ type ListChatsChatData struct {
 	UnreadCount int64 `json:"unread_count"`
 }
 
-// Returns information about chats by specified filters
+// Returns information about chats by specified filters.
+//
+// Deprecated: use ListV3 for the current cursor-based chat contract.
 func (c Chats) List(ctx context.Context, params *ListChatsParams) (*ListChatsResponse, error) {
 	url := "/v2/chat/list"
 
@@ -88,6 +94,136 @@ func (c Chats) List(ctx context.Context, params *ListChatsParams) (*ListChatsRes
 	}
 	response.CopyCommonResponse(&resp.CommonResponse)
 
+	return resp, nil
+}
+
+type ListChatsV3Params struct {
+	Filter *ListChatsV3Filter `json:"filter,omitempty"`
+	// Page size, up to 100. Pagination remains the caller's responsibility.
+	Limit  int64  `json:"limit" default:"30"`
+	Cursor string `json:"cursor,omitempty"`
+}
+
+type ListChatsV3Filter struct {
+	ChatStatus string `json:"chat_status" default:"ALL"`
+	UnreadOnly bool   `json:"unread_only"`
+}
+
+// ChatMessageID preserves provider message IDs without floating-point conversion.
+// Ozon documents uint64 integers, but examples contain decimal strings including
+// values larger than uint64. The opaque decimal identifier is retained exactly.
+type ChatMessageID string
+
+func (id *ChatMessageID) UnmarshalJSON(data []byte) error {
+	value := bytes.TrimSpace(data)
+	if bytes.Equal(value, []byte("null")) {
+		*id = ""
+		return nil
+	}
+	var text string
+	if len(value) > 0 && value[0] == '"' {
+		if err := json.Unmarshal(value, &text); err != nil {
+			return err
+		}
+	} else {
+		text = string(value)
+	}
+	for _, digit := range text {
+		if digit < '0' || digit > '9' {
+			return fmt.Errorf("invalid chat message identifier")
+		}
+	}
+	if text == "" {
+		*id = ""
+		return nil
+	}
+	*id = ChatMessageID(text)
+	return nil
+}
+
+type ListChatsV3ChatDetails struct {
+	// CreatedAt retains the provider date verbatim, including legacy date formats.
+	CreatedAt  string `json:"created_at"`
+	ChatId     string `json:"chat_id"`
+	ChatStatus string `json:"chat_status"`
+	ChatType   string `json:"chat_type"`
+}
+
+type ListChatsV3Chat struct {
+	Chat                 ListChatsV3ChatDetails `json:"chat"`
+	FirstUnreadMessageId ChatMessageID          `json:"first_unread_message_id"`
+	LastMessageId        ChatMessageID          `json:"last_message_id"`
+	UnreadCount          int64                  `json:"unread_count"`
+}
+
+type ListChatsV3Response struct {
+	core.CommonResponse
+	Chats            []ListChatsV3Chat `json:"chats"`
+	TotalUnreadCount int64             `json:"total_unread_count"`
+	Cursor           string            `json:"cursor"`
+	HasNext          bool              `json:"has_next"`
+	rawJSON          []byte
+}
+
+// RawResponseJSON returns an independent snapshot of the provider body, including
+// fields outside the typed contract, for consumers with established richer mappings.
+func (response ListChatsV3Response) RawResponseJSON() []byte {
+	return append([]byte(nil), response.rawJSON...)
+}
+
+func (response *ListChatsV3Response) UnmarshalJSON(data []byte) error {
+	type wire ListChatsV3Response
+	var decoded struct {
+		*wire
+		HasNext json.RawMessage `json:"has_next"`
+	}
+	value := wire{}
+	decoded.wire = &value
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	flag, err := decodeSellerPaginationFlag(decoded.HasNext)
+	if err != nil {
+		return err
+	}
+	value.HasNext = flag
+	value.rawJSON = append([]byte(nil), data...)
+	*response = ListChatsV3Response(value)
+	return nil
+}
+
+// decodeSellerPaginationFlag handles the boolean schema and the string examples
+// published for the current chat and warehouse cursor pagination contracts.
+func decodeSellerPaginationFlag(data []byte) (bool, error) {
+	if len(data) == 0 || bytes.Equal(bytes.TrimSpace(data), []byte("null")) {
+		return false, nil
+	}
+	var flag bool
+	if err := json.Unmarshal(data, &flag); err == nil {
+		return flag, nil
+	}
+	var text string
+	if err := json.Unmarshal(data, &text); err == nil {
+		switch strings.ToLower(strings.TrimSpace(text)) {
+		case "true", "1":
+			return true, nil
+		case "false", "0":
+			return false, nil
+		}
+	}
+	return false, fmt.Errorf("invalid seller pagination has_next")
+}
+
+// ListV3 reads one page from the current chat API. It does not switch the legacy
+// List route or automatically fetch subsequent pages.
+func (c Chats) ListV3(ctx context.Context, params *ListChatsV3Params) (*ListChatsV3Response, error) {
+	url := "/v3/chat/list"
+	resp := &ListChatsV3Response{}
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
 	return resp, nil
 }
 

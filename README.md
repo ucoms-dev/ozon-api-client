@@ -132,3 +132,12 @@ as responses: check `StatusCode` as well as `err`.
 See [rate limits](docs/ozon-seller-api-rate-limits-2026-10-06.md) for all documented
 special budgets and header units, and the [fresh route audit](docs/ozon-seller-api-contract-audit-2026-10-06.md)
 for implemented and unsupported endpoints.
+
+## Chat v3 and provider shape compatibility
+
+`Chats().ListV3` adds the current cursor-based chat list with typed nested chat
+fields, exact decimal message IDs, and a copied raw provider snapshot for richer
+consumer mappings. Current chat and warehouse pagination accepts the boolean
+schema and documented string examples. Legacy `Chats().List` remains available.
+`GetProductRangeLimitResponse.QuotaDataPresent()` distinguishes explicit budgets
+from absent or null quota fields. See [the migration guide](docs/ozon-chat-v3-migration.md).

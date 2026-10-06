@@ -1904,6 +1904,7 @@ func (c Products) GetProductDescription(ctx context.Context, params *GetProductD
 
 type GetProductRangeLimitResponse struct {
 	core.CommonResponse
+	quotaDataPresent bool
 
 	// Daily product creation limit
 	DailyCreate GetProductRangeLimitUploadQuota `json:"daily_create"`
@@ -1917,6 +1918,40 @@ type GetProductRangeLimitResponse struct {
 
 	// Product range limit
 	Total GetProductRangeLimitTotal `json:"total"`
+}
+
+// QuotaDataPresent distinguishes an explicit provider quota, including zero,
+// from a missing/null quota envelope. It does not infer a budget from absence.
+func (response GetProductRangeLimitResponse) QuotaDataPresent() bool {
+	return response.quotaDataPresent
+}
+
+func (response *GetProductRangeLimitResponse) UnmarshalJSON(data []byte) error {
+	type wire GetProductRangeLimitResponse
+	var decoded wire
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	var fields map[string]json.RawMessage
+	if err := json.Unmarshal(data, &fields); err != nil {
+		return err
+	}
+	present := true
+	for _, name := range []string{"daily_create", "daily_update", "total"} {
+		var quota map[string]json.RawMessage
+		if err := json.Unmarshal(fields[name], &quota); err != nil {
+			present = false
+			continue
+		}
+		for _, field := range []string{"limit", "usage"} {
+			if value, ok := quota[field]; !ok || bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
+				present = false
+			}
+		}
+	}
+	decoded.quotaDataPresent = present
+	*response = GetProductRangeLimitResponse(decoded)
+	return nil
 }
 
 // GetProductRangeLimitOperationLimit is a provider-supplied operation quota.
@@ -1944,8 +1979,20 @@ func (limits *GetProductRangeLimitOperationLimits) UnmarshalJSON(data []byte) er
 		}
 		decoded = []GetProductRangeLimitOperationLimit{item}
 	} else {
-		if err := json.Unmarshal(data, &decoded); err != nil {
+		var items []json.RawMessage
+		if err := json.Unmarshal(data, &items); err != nil {
 			return fmt.Errorf("decode product operation limits: %w", err)
+		}
+		decoded = make([]GetProductRangeLimitOperationLimit, 0, len(items))
+		for _, raw := range items {
+			if len(bytes.TrimSpace(raw)) == 0 || bytes.TrimSpace(raw)[0] != '{' {
+				return fmt.Errorf("decode product operation limits: expected object item")
+			}
+			var item GetProductRangeLimitOperationLimit
+			if err := json.Unmarshal(raw, &item); err != nil {
+				return fmt.Errorf("decode product operation limit item: %w", err)
+			}
+			decoded = append(decoded, item)
 		}
 	}
 	*limits = decoded

@@ -2,6 +2,7 @@ package ozon
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -120,6 +121,27 @@ type GetListOfWarehousesV2Response struct {
 	Cursor     string                           `json:"cursor"`
 	Warehouses []GetListOfWarehousesV2Warehouse `json:"warehouses"`
 	HasNext    bool                             `json:"has_next"`
+}
+
+// UnmarshalJSON accepts the documented boolean has_next and the string shape
+// used in Ozon's examples without losing cursor continuation.
+func (response *GetListOfWarehousesV2Response) UnmarshalJSON(data []byte) error {
+	type wire GetListOfWarehousesV2Response
+	value := wire{}
+	decoded := struct {
+		*wire
+		HasNext json.RawMessage `json:"has_next"`
+	}{wire: &value}
+	if err := json.Unmarshal(data, &decoded); err != nil {
+		return err
+	}
+	flag, err := decodeSellerPaginationFlag(decoded.HasNext)
+	if err != nil {
+		return err
+	}
+	value.HasNext = flag
+	*response = GetListOfWarehousesV2Response(value)
+	return nil
 }
 
 // GetListOfWarehousesV2Warehouse uses the current v2 field names and enums.

@@ -12,7 +12,7 @@ for source in ozon/*.go; do
     sources+=("$source")
   fi
 done
-go vet "${sources[@]}" ozon/promotions_*_test.go   ozon/request_contract_test.go ozon/products_current_contract_test.go   ozon/warehouses_v2_contract_test.go ozon/seller_swagger_contract_test.go
+go vet "${sources[@]}" ozon/promotions_*_test.go   ozon/request_contract_test.go ozon/products_current_contract_test.go   ozon/warehouses_v2_contract_test.go ozon/seller_swagger_contract_test.go ozon/chats_v3_contract_test.go
 
 root_sources=()
 for source in *.go; do

@@ -55,7 +55,7 @@ func TestProductOperationLimitsDecode(t *testing.T) {
 			t.Fatalf("limits=%v", limits)
 		}
 	}
-	for _, body := range []string{`"bad"`, `123`, `true`, `[{"limit":"invalid"}]`} {
+	for _, body := range []string{`"bad"`, `123`, `true`, `[{"limit":"invalid"}]`, `[null]`} {
 		limits := GetProductRangeLimitOperationLimits{{Limit: 42}}
 		if err := json.Unmarshal([]byte(body), &limits); err == nil {
 			t.Fatalf("accepted %s", body)
@@ -85,5 +85,21 @@ func TestProductQuota429Metadata(t *testing.T) {
 	}
 	if response.StatusCode != 429 || response.Code != 8 || response.Headers.Get("Item-Retry-After") != "7" || calls != 1 {
 		t.Fatalf("response=%+v calls=%d", response, calls)
+	}
+}
+
+func TestProductQuotaPresencePreservesUnknownBudget(t *testing.T) {
+	for _, body := range []string{`{}`, `{"daily_create":null}`, `{"daily_create":{"limit":null,"usage":0},"daily_update":{"limit":1,"usage":0},"total":{"limit":1,"usage":0}}`} {
+		var response GetProductRangeLimitResponse
+		if err := json.Unmarshal([]byte(body), &response); err != nil {
+			t.Fatal(err)
+		}
+		if response.QuotaDataPresent() {
+			t.Fatalf("unknown quota treated as present: %s", body)
+		}
+	}
+	var response GetProductRangeLimitResponse
+	if err := json.Unmarshal([]byte(`{"daily_create":{"limit":0,"usage":0},"daily_update":{"limit":-1,"usage":0},"total":{"limit":1,"usage":0}}`), &response); err != nil || !response.QuotaDataPresent() {
+		t.Fatalf("explicit quotas absent: %+v %v", response, err)
 	}
 }
