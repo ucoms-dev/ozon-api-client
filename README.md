@@ -112,11 +112,23 @@ go run ./cmd/contract-audit \
 
 The generated report records the source document SHA-256, exact matches,
 client-only endpoints, method mismatches, deprecated endpoints, and operations
-that are not implemented by the client. The current audited snapshot is in
-[`docs/ozon-seller-api-contract-audit-2026-09-02.md`](docs/ozon-seller-api-contract-audit-2026-09-02.md).
+that are not implemented by the client. The current route audit is in
+[`docs/ozon-seller-api-contract-audit-2026-10-06.md`](docs/ozon-seller-api-contract-audit-2026-10-06.md).
 The reviewed compatibility decisions and implementation order are in
 [`docs/ozon-seller-api-contract-plan-2026-09-02.md`](docs/ozon-seller-api-contract-plan-2026-09-02.md).
 
 Deprecated exported methods remain available throughout the v1 release line for
 source compatibility. New code should use the replacement named in each Go doc
 comment. Removing those methods is reserved for a future major version.
+
+## Current product, warehouse and quota contracts
+
+The [2026-10-06 update](docs/ozon-seller-api-update-2026-10-06.md) adds
+`Products().UpdateProductImagesV2`, `Warehouses().GetListOfWarehousesV2`, typed
+product-operation quotas, and HTTP headers through `CommonResponse.Headers`.
+Existing methods remain available. The SDK continues to return provider errors
+as responses: check `StatusCode` as well as `err`.
+
+See [rate limits](docs/ozon-seller-api-rate-limits-2026-10-06.md) for all documented
+special budgets and header units, and the [fresh route audit](docs/ozon-seller-api-contract-audit-2026-10-06.md)
+for implemented and unsupported endpoints.

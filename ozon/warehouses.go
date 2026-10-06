@@ -90,6 +90,8 @@ type GetListOfWarehousesResultFirstMile struct {
 
 // Method returns the list of FBS and rFBS warehouses.
 // To get the list of FBO warehouses, use the /v1/cluster/list method.
+//
+// Deprecated: use GetListOfWarehousesV2 for the current cursor-based contract.
 func (c Warehouses) GetListOfWarehouses(ctx context.Context) (*GetListOfWarehousesResponse, error) {
 	url := "/v1/warehouse/list"
 
@@ -101,6 +103,97 @@ func (c Warehouses) GetListOfWarehouses(ctx context.Context) (*GetListOfWarehous
 	}
 	response.CopyCommonResponse(&resp.CommonResponse)
 
+	return resp, nil
+}
+
+// GetListOfWarehousesV2Params selects a page of FBS and rFBS warehouses.
+type GetListOfWarehousesV2Params struct {
+	// Number of warehouses returned, up to 200.
+	Limit  int64  `json:"limit"`
+	Cursor string `json:"cursor"`
+	// Swagger specifies decimal int64 strings, although its example uses numbers.
+	WarehouseIds []string `json:"warehouse_ids,omitempty"`
+}
+
+type GetListOfWarehousesV2Response struct {
+	core.CommonResponse
+	Cursor     string                           `json:"cursor"`
+	Warehouses []GetListOfWarehousesV2Warehouse `json:"warehouses"`
+	HasNext    bool                             `json:"has_next"`
+}
+
+// GetListOfWarehousesV2Warehouse uses the current v2 field names and enums.
+// Enum strings remain open-ended to preserve future provider values.
+type GetListOfWarehousesV2Warehouse struct {
+	AddressInfo            GetListOfWarehousesV2AddressInfo `json:"address_info"`
+	CarriageLabelType      string                           `json:"carriage_label_type"`
+	CourierComment         string                           `json:"courier_comment"`
+	CourierPhones          []string                         `json:"courier_phones"`
+	CreatedAt              time.Time                        `json:"created_at"`
+	CutInTime              int64                            `json:"cut_in_time"`
+	FirstMile              GetListOfWarehousesV2FirstMile   `json:"first_mile"`
+	HasEntrustedAcceptance bool                             `json:"has_entrusted_acceptance"`
+	HasPostingsLimit       bool                             `json:"has_postings_limit"`
+	IsAutoAssembly         bool                             `json:"is_auto_assembly"`
+	IsComfort              bool                             `json:"is_comfort"`
+	IsExpress              bool                             `json:"is_express"`
+	IsKGT                  bool                             `json:"is_kgt"`
+	IsRFBS                 bool                             `json:"is_rfbs"`
+	IsWaybillEnabled       bool                             `json:"is_waybill_enabled"`
+	MinPostingsLimit       int32                            `json:"min_postings_limit"`
+	Name                   string                           `json:"name"`
+	// Nil means the warehouse is active rather than paused (rFBS only).
+	PauseAt       *time.Time                     `json:"pause_at,omitempty"`
+	Phone         string                         `json:"phone"`
+	PostingsLimit int32                          `json:"postings_limit"`
+	SLACutIn      int64                          `json:"sla_cut_in"`
+	Status        string                         `json:"status"`
+	Timetable     GetListOfWarehousesV2Timetable `json:"timetable"`
+	UpdatedAt     time.Time                      `json:"updated_at"`
+	WarehouseId   int64                          `json:"warehouse_id"`
+	WarehouseType string                         `json:"warehouse_type"`
+	WithItemList  bool                           `json:"with_item_list"`
+	WorkingDays   []string                       `json:"working_days"`
+}
+
+type GetListOfWarehousesV2AddressInfo struct {
+	Address   string  `json:"address"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+	UTC       string  `json:"utc"`
+}
+
+type GetListOfWarehousesV2FirstMile struct {
+	DropoffPointId      string `json:"dropoff_point_id"`
+	FirstMileIsChanging bool   `json:"first_mile_is_changing"`
+	TimeslotFrom        string `json:"timeslot_from"`
+	TimeslotId          int64  `json:"timeslot_id"`
+	TimeslotTo          string `json:"timeslot_to"`
+	Type                string `json:"type"`
+}
+
+type GetListOfWarehousesV2Timetable struct {
+	TimetableFrom time.Time                           `json:"timetable_from"`
+	TimetableTo   time.Time                           `json:"timetable_to"`
+	WorkingHours  []GetListOfWarehousesV2WorkingHours `json:"working_hours"`
+}
+
+type GetListOfWarehousesV2WorkingHours struct {
+	TimeFrom time.Time `json:"time_from"`
+	TimeTo   time.Time `json:"time_to"`
+}
+
+// GetListOfWarehousesV2 returns a page of FBS and rFBS warehouses. When HasNext
+// is true, pass Cursor in the next request. The v1-only 1/minute restriction is
+// not documented for this endpoint; the shared Client ID rate budget applies.
+func (c Warehouses) GetListOfWarehousesV2(ctx context.Context, params *GetListOfWarehousesV2Params) (*GetListOfWarehousesV2Response, error) {
+	url := "/v2/warehouse/list"
+	resp := &GetListOfWarehousesV2Response{}
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
 	return resp, nil
 }
 

@@ -89,6 +89,7 @@ func (c Client) Request(ctx context.Context, method string, path string, req, re
 	response := &Response{}
 	response.Data = resp
 	response.StatusCode = httpResp.StatusCode
+	response.Headers = httpResp.Header.Clone()
 	if httpResp.StatusCode == http.StatusOK {
 		if len(bytes.TrimSpace(body)) == 0 {
 			return response, nil

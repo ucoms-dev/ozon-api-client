@@ -1,7 +1,10 @@
 package ozon
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -583,7 +586,8 @@ type UpdateStocksResultError struct {
 
 // Allows you to change the products in stock quantity. The method is only used for FBS and rFBS warehouses.
 //
-// With one request you can change the availability for 100 products. You can send up to 80 requests in a minute.
+// Each request contains up to 100 offer/warehouse pairs. The seller account
+// budget is 80 requests per minute, in addition to the shared Client ID budget.
 //
 // Availability can only be set after the product status has been changed to processed.
 func (c Products) UpdateStocks(ctx context.Context, params *UpdateStocksParams) (*UpdateStocksResponse, error) {
@@ -667,9 +671,12 @@ type UpdateQuantityStockProductsResultError struct {
 
 // Allows you to change the products in stock quantity.
 //
-// With one request you can change the availability for 100 products. You can send up to 80 requests in a minute.
+// Each request contains up to 100 offer/warehouse pairs. The seller account
+// budget is 80 requests per minute, in addition to the shared Client ID budget.
 //
-// You can update the stock of one product in one warehouse only once in 2 minutes, otherwise there will be the TOO_MANY_REQUESTS error in the response.
+// The same product/warehouse pair can be updated once per 30 seconds;
+// otherwise the item result contains TOO_MANY_REQUESTS. HTTP 200 alone does
+// not imply that every item was updated.
 //
 // You can set the availability of an item only after the product status is changed to price_sent
 //
@@ -842,6 +849,7 @@ type UpdatePricesResultError struct {
 
 // Allows you to change a price of one or more products.
 // The price of each product can be updated no more than 10 times per hour.
+// A request contains up to 1000 prices; inspect each item result for acceptance.
 // To reset old_price, set 0 for this parameter.
 func (c Products) UpdatePrices(ctx context.Context, params *UpdatePricesParams) (*UpdatePricesResponse, error) {
 	url := "/v1/product/import/prices"
@@ -1426,6 +1434,9 @@ type ProductInfoResultPicture struct {
 // first get the details using `/v2/product/info` or `/v2/product/info/list` methods.
 // Using them you can get the current list of images and their order.
 // Copy the data from the images, images360, and color_image fields and make the necessary changes to it
+//
+// Deprecated: use UpdateProductImagesV2. Ozon announced retirement of the v1
+// endpoint on 2026-10-01; its request and response differ from v2.
 func (c Products) UpdateProductImages(ctx context.Context, params *UpdateProductImagesParams) (*ProductInfoResponse, error) {
 	url := "/v1/product/pictures/import"
 
@@ -1437,6 +1448,44 @@ func (c Products) UpdateProductImages(ctx context.Context, params *UpdateProduct
 	}
 	response.CopyCommonResponse(&resp.CommonResponse)
 
+	return resp, nil
+}
+
+// UpdateProductImagesV2Params contains up to 100 products per request.
+// Every item replaces the complete set of images on its product card.
+type UpdateProductImagesV2Params struct {
+	Items []UpdateProductImagesV2Item `json:"items"`
+}
+
+type UpdateProductImagesV2Item struct {
+	// Seller product identifier (required).
+	OfferId string `json:"offer_id"`
+	// Main image; if empty, the first entry in Images is the main image.
+	PrimaryImage string `json:"primary_image"`
+	// Marketing color image.
+	ColorImage string `json:"color_image"`
+	// Ordered image URLs, up to 50 per product. URLs must be publicly accessible.
+	Images []string `json:"images"`
+}
+
+type UpdateProductImagesV2Response struct {
+	core.CommonResponse
+	// Task identifier for GetProductImportStatus. Acceptance is asynchronous.
+	TaskId int64 `json:"task_id"`
+}
+
+// UpdateProductImagesV2 uploads or replaces product images using the v2 contract.
+// Poll GetProductImportStatus with TaskId to determine the processing outcome.
+// Product-operation quotas apply in addition to the shared Client ID rate limit;
+// inspect response.Headers and GetProductRangeLimit for provider quota details.
+func (c Products) UpdateProductImagesV2(ctx context.Context, params *UpdateProductImagesV2Params) (*UpdateProductImagesV2Response, error) {
+	url := "/v2/product/pictures/import"
+	resp := &UpdateProductImagesV2Response{}
+	response, err := c.client.Request(ctx, http.MethodPost, url, params, resp, nil)
+	if err != nil {
+		return nil, err
+	}
+	response.CopyCommonResponse(&resp.CommonResponse)
 	return resp, nil
 }
 
@@ -1862,8 +1911,45 @@ type GetProductRangeLimitResponse struct {
 	// Daily product update limit
 	DailyUpdate GetProductRangeLimitUploadQuota `json:"daily_update"`
 
+	// Per-minute product-operation quotas. Nil means the field was absent or null,
+	// not that the provider budget is zero.
+	OperationLimits GetProductRangeLimitOperationLimits `json:"operation_limits,omitempty"`
+
 	// Product range limit
 	Total GetProductRangeLimitTotal `json:"total"`
+}
+
+// GetProductRangeLimitOperationLimit is a provider-supplied operation quota.
+// LimitType is open-ended to preserve future Ozon values.
+type GetProductRangeLimitOperationLimit struct {
+	Limit     int64  `json:"limit"`
+	LimitType string `json:"limit_type"`
+}
+
+// GetProductRangeLimitOperationLimits accepts the object documented in Swagger
+// and the array returned by Ozon. Marshaling uses the observed array shape.
+type GetProductRangeLimitOperationLimits []GetProductRangeLimitOperationLimit
+
+func (limits *GetProductRangeLimitOperationLimits) UnmarshalJSON(data []byte) error {
+	data = bytes.TrimSpace(data)
+	if bytes.Equal(data, []byte("null")) {
+		*limits = nil
+		return nil
+	}
+	var decoded []GetProductRangeLimitOperationLimit
+	if len(data) > 0 && data[0] == '{' {
+		var item GetProductRangeLimitOperationLimit
+		if err := json.Unmarshal(data, &item); err != nil {
+			return fmt.Errorf("decode product operation limit: %w", err)
+		}
+		decoded = []GetProductRangeLimitOperationLimit{item}
+	} else {
+		if err := json.Unmarshal(data, &decoded); err != nil {
+			return fmt.Errorf("decode product operation limits: %w", err)
+		}
+	}
+	*limits = decoded
+	return nil
 }
 
 type GetProductRangeLimitTotal struct {
@@ -1889,6 +1975,7 @@ type GetProductRangeLimitUploadQuota struct {
 //   - Product range limit: how many products you can create in your personal account.
 //   - Products creation limit: how many products you can create per day.
 //   - Products update limit: how many products you can update per day.
+//   - Product-operation limits: the provider-supplied per-minute quotas.
 //
 // If you have a product range limit and you exceed it, you won't be able to create new products
 func (c Products) GetProductRangeLimit(ctx context.Context) (*GetProductRangeLimitResponse, error) {

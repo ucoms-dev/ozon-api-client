@@ -1,0 +1,299 @@
+{
+  "marker": "sdk_swagger_shapes_snapshot",
+  "source": "https://docs.ozon.ru/api/seller/swagger.json",
+  "captured_at": "2026-10-06T21:47:40.636Z",
+  "schemas": {
+    "product.v2.ProductImportPicturesV2Request": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/product.v2.ProductImportPicturesV2Request.Item"
+          },
+          "maxItems": 100
+        }
+      }
+    },
+    "product.v2.ProductImportPicturesV2Request.Item": {
+      "type": "object",
+      "required": [
+        "offer_id"
+      ],
+      "properties": {
+        "offer_id": {
+          "type": "string"
+        },
+        "primary_image": {
+          "type": "string"
+        },
+        "color_image": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50
+        }
+      }
+    },
+    "product.v2.ProductInfoPicturesV2Response": {
+      "type": "object",
+      "properties": {
+        "task_id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "v4GetUploadQuotaResponse": {
+      "type": "object",
+      "properties": {
+        "daily_create": {
+          "$ref": "#/components/schemas/GetUploadQuotaResponseDailyCreate"
+        },
+        "daily_update": {
+          "$ref": "#/components/schemas/GetUploadQuotaResponseDailyUpdate"
+        },
+        "operation_limits": {
+          "$ref": "#/components/schemas/product.v4.GetUploadQuotaResponse.OperationLimits"
+        },
+        "total": {
+          "$ref": "#/components/schemas/GetUploadQuotaResponseTotal"
+        }
+      }
+    },
+    "product.v4.GetUploadQuotaResponse.OperationLimits": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "limit_type": {
+          "$ref": "#/components/schemas/product.v4.GetUploadQuotaResponse.OperationLimits.LimitType.Enum"
+        }
+      }
+    },
+    "v2WarehouseListV2Request": {
+      "type": "object",
+      "required": [
+        "limit"
+      ],
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "maximum": 200
+        },
+        "cursor": {
+          "type": "string"
+        },
+        "warehouse_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          },
+          "maximum": 200
+        }
+      }
+    },
+    "v2WarehouseListV2Response": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "type": "string"
+        },
+        "warehouses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/WarehouseListV2ResponseWarehouse"
+          }
+        },
+        "has_next": {
+          "type": "boolean"
+        }
+      }
+    },
+    "WarehouseListV2ResponseWarehouse": {
+      "type": "object",
+      "properties": {
+        "address_info": {
+          "$ref": "#/components/schemas/WarehouseAddressInfo"
+        },
+        "carriage_label_type": {
+          "$ref": "#/components/schemas/WarehouseCarriageLabelTypeEnum"
+        },
+        "courier_comment": {
+          "type": "string"
+        },
+        "courier_phones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "cut_in_time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "first_mile": {
+          "$ref": "#/components/schemas/WarehouseFirstMile"
+        },
+        "has_entrusted_acceptance": {
+          "type": "boolean"
+        },
+        "has_postings_limit": {
+          "type": "boolean"
+        },
+        "is_auto_assembly": {
+          "type": "boolean"
+        },
+        "is_comfort": {
+          "type": "boolean"
+        },
+        "is_express": {
+          "type": "boolean"
+        },
+        "is_kgt": {
+          "type": "boolean"
+        },
+        "is_rfbs": {
+          "type": "boolean"
+        },
+        "is_waybill_enabled": {
+          "type": "boolean"
+        },
+        "min_postings_limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "pause_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "postings_limit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sla_cut_in": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string"
+        },
+        "timetable": {
+          "$ref": "#/components/schemas/WarehouseTimetable"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "warehouse_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "warehouse_type": {
+          "type": "string"
+        },
+        "with_item_list": {
+          "type": "boolean"
+        },
+        "working_days": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/WarehouseWorkingDaysEnum"
+          }
+        }
+      }
+    },
+    "WarehouseAddressInfo": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "utc": {
+          "type": "string"
+        }
+      }
+    },
+    "WarehouseFirstMile": {
+      "type": "object",
+      "properties": {
+        "dropoff_point_id": {
+          "type": "string"
+        },
+        "first_mile_is_changing": {
+          "type": "boolean"
+        },
+        "timeslot_from": {
+          "type": "string"
+        },
+        "timeslot_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "timeslot_to": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/components/schemas/FirstMileTypeEnum"
+        }
+      }
+    },
+    "WarehouseTimetable": {
+      "type": "object",
+      "properties": {
+        "timetable_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timetable_to": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "working_hours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/TimetableWorkingHours"
+          }
+        }
+      }
+    },
+    "TimetableWorkingHours": {
+      "type": "object",
+      "properties": {
+        "time_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "time_to": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2901 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Ozon Seller API operations captured via Brave",
+    "version": "2.1"
+  },
+  "paths": {
+    "/v1/roles": {
+      "post": {
+        "operationId": "AccessAPI_RolesByToken",
+        "deprecated": false
+      }
+    },
+    "/v1/seller/info": {
+      "post": {
+        "operationId": "SellerAPI_SellerInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/seller/ozon-logistics/info": {
+      "post": {
+        "operationId": "SellerAPI_SellerOzonLogisticsInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/description-category/tree": {
+      "post": {
+        "operationId": "DescriptionCategoryAPI_GetTree",
+        "deprecated": false
+      }
+    },
+    "/v1/description-category/attribute": {
+      "post": {
+        "operationId": "DescriptionCategoryAPI_GetAttributes",
+        "deprecated": false
+      }
+    },
+    "/v1/description-category/attribute/values": {
+      "post": {
+        "operationId": "DescriptionCategoryAPI_GetAttributeValues",
+        "deprecated": false
+      }
+    },
+    "/v1/description-category/attribute/values/search": {
+      "post": {
+        "operationId": "DescriptionCategoryAPI_SearchAttributeValues",
+        "deprecated": false
+      }
+    },
+    "/v1/product/placement-zone/info": {
+      "post": {
+        "operationId": "ProductAPI_GetProductPlacementZoneInfo",
+        "deprecated": false
+      }
+    },
+    "/v3/product/import": {
+      "post": {
+        "operationId": "ProductAPI_ImportProductsV3",
+        "deprecated": false
+      }
+    },
+    "/v1/product/import/info": {
+      "post": {
+        "operationId": "ProductAPI_GetImportProductsInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/product/import-by-sku": {
+      "post": {
+        "operationId": "ProductAPI_ImportProductsBySKU",
+        "deprecated": false
+      }
+    },
+    "/v1/product/attributes/update": {
+      "post": {
+        "operationId": "ProductAPI_ProductUpdateAttributes",
+        "deprecated": false
+      }
+    },
+    "/v1/product/pictures/import": {
+      "post": {
+        "operationId": "ProductAPI_ProductImportPictures",
+        "deprecated": true
+      }
+    },
+    "/v2/product/pictures/import": {
+      "post": {
+        "operationId": "ProductImportPicturesV2",
+        "deprecated": false
+      }
+    },
+    "/v3/product/list": {
+      "post": {
+        "operationId": "ProductAPI_GetProductList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/rating-by-sku": {
+      "post": {
+        "operationId": "ProductAPI_GetProductRatingBySku",
+        "deprecated": false
+      }
+    },
+    "/v3/product/info/list": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoList",
+        "deprecated": false
+      }
+    },
+    "/v4/product/info/attributes": {
+      "post": {
+        "operationId": "ProductAPI_GetProductAttributesV4",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/description": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoDescription",
+        "deprecated": false
+      }
+    },
+    "/v4/product/info/limit": {
+      "post": {
+        "operationId": "ProductAPI_GetUploadQuota",
+        "deprecated": false
+      }
+    },
+    "/v1/product/update/offer-id": {
+      "post": {
+        "operationId": "ProductAPI_ProductUpdateOfferID",
+        "deprecated": false
+      }
+    },
+    "/v1/product/archive": {
+      "post": {
+        "operationId": "ProductAPI_ProductArchive",
+        "deprecated": false
+      }
+    },
+    "/v1/product/unarchive": {
+      "post": {
+        "operationId": "ProductAPI_ProductUnarchive",
+        "deprecated": false
+      }
+    },
+    "/v2/products/delete": {
+      "post": {
+        "operationId": "ProductAPI_DeleteProducts",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/subscription": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoSubscription",
+        "deprecated": false
+      }
+    },
+    "/v1/product/related-sku/get": {
+      "post": {
+        "operationId": "ProductAPI_ProductGetRelatedSKU",
+        "deprecated": false
+      }
+    },
+    "/v2/product/pictures/info": {
+      "post": {
+        "operationId": "ProductAPI_ProductInfoPicturesV2",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/wrong-volume": {
+      "post": {
+        "operationId": "ProductAPI_ProductInfoWrongVolume",
+        "deprecated": false
+      }
+    },
+    "/v1/barcode/add": {
+      "post": {
+        "operationId": "add-barcode",
+        "deprecated": false
+      }
+    },
+    "/v1/barcode/delete": {
+      "post": {
+        "operationId": "BarcodeDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/barcode/generate": {
+      "post": {
+        "operationId": "generate-barcode",
+        "deprecated": false
+      }
+    },
+    "/v2/products/stocks": {
+      "post": {
+        "operationId": "ProductAPI_ProductsStocksV2",
+        "deprecated": false
+      }
+    },
+    "/v4/product/info/stocks": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoStocks",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/warehouse/stocks": {
+      "post": {
+        "operationId": "ProductInfoWarehouseStocks",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/stocks-by-warehouse/fbs": {
+      "post": {
+        "operationId": "ProductAPI_ProductStocksByWarehouseFbs",
+        "deprecated": false
+      }
+    },
+    "/v2/product/info/stocks-by-warehouse/fbs": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoStocksByWarehouseFbsV2",
+        "deprecated": false
+      }
+    },
+    "/v1/product/import/prices": {
+      "post": {
+        "operationId": "ProductAPI_ImportProductsPrices",
+        "deprecated": false
+      }
+    },
+    "/v1/product/action/timer/update": {
+      "post": {
+        "operationId": "ProductAPI_ActionTimerUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/product/action/timer/status": {
+      "post": {
+        "operationId": "ProductAPI_ActionTimerStatus",
+        "deprecated": false
+      }
+    },
+    "/v5/product/info/prices": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoPrices",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/discounted": {
+      "post": {
+        "operationId": "ProductAPI_GetProductInfoDiscounted",
+        "deprecated": false
+      }
+    },
+    "/v1/product/update/discount": {
+      "post": {
+        "operationId": "ProductAPI_ProductUpdateDiscount",
+        "deprecated": false
+      }
+    },
+    "/v1/actions": {
+      "get": {
+        "operationId": "Promos",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/candidates": {
+      "post": {
+        "operationId": "PromosCandidates",
+        "deprecated": true
+      }
+    },
+    "/v2/actions/candidates": {
+      "post": {
+        "operationId": "ActionsCandidates",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/products": {
+      "post": {
+        "operationId": "PromosProducts",
+        "deprecated": true
+      }
+    },
+    "/v2/actions/products": {
+      "post": {
+        "operationId": "ActionsProducts",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/products/activate": {
+      "post": {
+        "operationId": "PromosProductsActivate",
+        "deprecated": true
+      }
+    },
+    "/v1/actions/products/update": {
+      "post": {
+        "operationId": "ActionsProductsUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/products/deactivate": {
+      "post": {
+        "operationId": "PromosProductsDeactivate",
+        "deprecated": true
+      }
+    },
+    "/v2/actions/products/deactivate": {
+      "post": {
+        "operationId": "ActionsProductsDeactivate",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/discounts-task/list": {
+      "post": {
+        "operationId": "promos_task_list",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/discounts-task/approve": {
+      "post": {
+        "operationId": "promos_task_approve",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/discounts-task/decline": {
+      "post": {
+        "operationId": "promos_task_decline",
+        "deprecated": false
+      }
+    },
+    "/v2/actions/auto-add/products/list": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsListV2",
+        "deprecated": false
+      }
+    },
+    "/v2/actions/auto-add/products/candidates": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsCandidatesV2",
+        "deprecated": false
+      }
+    },
+    "/v2/actions/auto-add/products/delete": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsDeleteV2",
+        "deprecated": false
+      }
+    },
+    "/v2/actions/auto-add/products/update": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsUpdateV2",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/competitors/list": {
+      "post": {
+        "operationId": "pricing_competitors",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/list": {
+      "post": {
+        "operationId": "pricing_list",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/create": {
+      "post": {
+        "operationId": "pricing_create",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/info": {
+      "post": {
+        "operationId": "pricing_info",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/update": {
+      "post": {
+        "operationId": "pricing_update",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/products/add": {
+      "post": {
+        "operationId": "pricing_items-add",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/strategy-ids-by-product-ids": {
+      "post": {
+        "operationId": "pricing_ids",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/products/list": {
+      "post": {
+        "operationId": "pricing_items-list",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/product/info": {
+      "post": {
+        "operationId": "pricing_items-info",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/products/delete": {
+      "post": {
+        "operationId": "pricing_items-delete",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/status": {
+      "post": {
+        "operationId": "pricing_status",
+        "deprecated": false
+      }
+    },
+    "/v1/pricing-strategy/delete": {
+      "post": {
+        "operationId": "pricing_delete",
+        "deprecated": false
+      }
+    },
+    "/v1/pass/list": {
+      "post": {
+        "operationId": "PassList",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/pass/create": {
+      "post": {
+        "operationId": "carriagePassCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/pass/update": {
+      "post": {
+        "operationId": "carriagePassUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/pass/delete": {
+      "post": {
+        "operationId": "carriagePassDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/return/pass/create": {
+      "post": {
+        "operationId": "returnPassCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/return/pass/update": {
+      "post": {
+        "operationId": "returnPassUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/return/pass/delete": {
+      "post": {
+        "operationId": "returnPassDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/brand/company-certification/list": {
+      "post": {
+        "operationId": "BrandAPI_BrandCompanyCertificationList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/accordance-types": {
+      "get": {
+        "operationId": "ProductAPI_ProductCertificateAccordanceTypes",
+        "deprecated": false
+      }
+    },
+    "/v2/product/certificate/accordance-types/list": {
+      "get": {
+        "operationId": "CertificateAccordanceTypes",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/types": {
+      "get": {
+        "operationId": "ProductAPI_ProductCertificateTypes",
+        "deprecated": false
+      }
+    },
+    "/v2/product/certification/list": {
+      "post": {
+        "operationId": "ProductAPI_ProductCertificationList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certification/list": {
+      "post": {
+        "operationId": "ProductAPI_V1ProductCertificationList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/create": {
+      "post": {
+        "operationId": "ProductAPI_ProductCertificateCreate",
+        "deprecated": true
+      }
+    },
+    "/v1/product/certificate/bind": {
+      "post": {
+        "operationId": "ProductAPI_ProductCertificateBind",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/delete": {
+      "post": {
+        "operationId": "CertificateDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/info": {
+      "post": {
+        "operationId": "CertificateInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/list": {
+      "post": {
+        "operationId": "CertificateList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/product_status/list": {
+      "post": {
+        "operationId": "ProductStatusList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/products/list": {
+      "post": {
+        "operationId": "CertificateProductsList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/unbind": {
+      "post": {
+        "operationId": "CertificateUnbind",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/rejection_reasons/list": {
+      "post": {
+        "operationId": "RejectionReasonsList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/certificate/status/list": {
+      "post": {
+        "operationId": "CertificateStatusList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/list": {
+      "post": {
+        "operationId": "WarehouseAPI_WarehouseList",
+        "deprecated": false
+      }
+    },
+    "/v1/delivery-method/list": {
+      "post": {
+        "operationId": "WarehouseAPI_DeliveryMethodList",
+        "deprecated": false
+      }
+    },
+    "/v2/delivery-method/list": {
+      "post": {
+        "operationId": "WarehouseAPI_DeliveryMethodListV2",
+        "deprecated": false
+      }
+    },
+    "/v1/delivery-method/return/settings/get": {
+      "post": {
+        "operationId": "GetDeliveryMethodReturnSettingsV1",
+        "deprecated": false
+      }
+    },
+    "/v2/warehouse/list": {
+      "post": {
+        "operationId": "WarehouseListV2",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/operation/status": {
+      "post": {
+        "operationId": "GetWarehouseFBSOperationStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/archive": {
+      "post": {
+        "operationId": "ArchiveWarehouseFBS",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/unarchive": {
+      "post": {
+        "operationId": "UnarchiveWarehouseFBS",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/invalid-products/get": {
+      "post": {
+        "operationId": "WarehouseInvalidProductsGet",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/warehouses-with-invalid-products": {
+      "post": {
+        "operationId": "WarehouseWithInvalidProducts",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/ozon/list": {
+      "post": {
+        "operationId": "WarehouseOZONList",
+        "deprecated": false
+      }
+    },
+    "/v1/polygon/create": {
+      "post": {
+        "operationId": "PolygonAPI_CreatePolygon",
+        "deprecated": false
+      }
+    },
+    "/v1/polygon/bind": {
+      "post": {
+        "operationId": "PolygonAPI_BindPolygon",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbo/list": {
+      "post": {
+        "operationId": "PostingAPI_GetFboPostingList",
+        "deprecated": true
+      }
+    },
+    "/v3/posting/fbo/list": {
+      "post": {
+        "operationId": "PostingFboList",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbo/get": {
+      "post": {
+        "operationId": "PostingAPI_GetFboPosting",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbo/cancel-reason/list": {
+      "post": {
+        "operationId": "PostingAPI_GetPostingFboCancelReasonList",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/status/counter": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderStatusCounter",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/bundle": {
+      "post": {
+        "operationId": "SupplyOrderBundle",
+        "deprecated": false
+      }
+    },
+    "/v3/supply-order/list": {
+      "post": {
+        "operationId": "SupplyOrderList",
+        "deprecated": false
+      }
+    },
+    "/v3/supply-order/get": {
+      "post": {
+        "operationId": "SupplyOrderGet",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/timeslot/get": {
+      "post": {
+        "operationId": "SupplyOrderAPI_GetSupplyOrderTimeslots",
+        "deprecated": false
+      }
+    },
+    "/v2/supply-order/timeslot/list": {
+      "post": {
+        "operationId": "SupplyOrderTimeslotList",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/timeslot/update": {
+      "post": {
+        "operationId": "SupplyOrderAPI_UpdateSupplyOrderTimeslot",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/timeslot/status": {
+      "post": {
+        "operationId": "SupplyOrderAPI_GetSupplyOrderTimeslotStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/pass/create": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderPassCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/pass/status": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderPassStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/details": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderDetails",
+        "deprecated": false
+      }
+    },
+    "/v1/supplier/available_warehouses": {
+      "get": {
+        "operationId": "SupplierAPI_SupplierAvailableWarehouses",
+        "deprecated": false
+      }
+    },
+    "/v1/cluster/list": {
+      "post": {
+        "operationId": "SupplyDraftAPI_DraftClusterList",
+        "deprecated": false
+      }
+    },
+    "/v2/cluster/list": {
+      "post": {
+        "operationId": "DraftClusterList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbo/list": {
+      "post": {
+        "operationId": "SupplyDraftAPI_DraftGetWarehouseFboList",
+        "deprecated": false
+      }
+    },
+    "/v1/draft/crossdock/create": {
+      "post": {
+        "operationId": "DraftCrossdockCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/draft/direct/create": {
+      "post": {
+        "operationId": "DraftDirectCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/draft/multi-cluster/create": {
+      "post": {
+        "operationId": "DraftMultiClusterCreate",
+        "deprecated": false
+      }
+    },
+    "/v2/draft/create/info": {
+      "post": {
+        "operationId": "DraftCreateInfo",
+        "deprecated": false
+      }
+    },
+    "/v2/draft/timeslot/info": {
+      "post": {
+        "operationId": "DraftTimeslotInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/create": {
+      "post": {
+        "operationId": "CargoesAPI_CargoesCreate",
+        "deprecated": false
+      }
+    },
+    "/v2/cargoes/create/info": {
+      "post": {
+        "operationId": "CargoesCreateInfoV2",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/get": {
+      "post": {
+        "operationId": "CargoesGet",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/delete": {
+      "post": {
+        "operationId": "CargoesAPI_CargoesDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/delete/status": {
+      "post": {
+        "operationId": "CargoesAPI_CargoesDeleteStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/rules/get": {
+      "post": {
+        "operationId": "CargoesAPI_CargoesRulesGet",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes-label/create": {
+      "post": {
+        "operationId": "CargoesAPI_CargoesLabelCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes-label/get": {
+      "post": {
+        "operationId": "CargoesAPI_CargoesLabelGet",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes-label/file/{file_guid}": {
+      "get": {
+        "operationId": "CargoesAPI_CargoesLabelFile",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/cancel": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/cancel/status": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderCancelStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/content/update": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderContentUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/content/update/status": {
+      "post": {
+        "operationId": "SupplyOrderAPI_SupplyOrderContentUpdateStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/content/update/validation": {
+      "post": {
+        "operationId": "SupplyOrderContentUpdateValidation",
+        "deprecated": false
+      }
+    },
+    "/v2/draft/supply/create": {
+      "post": {
+        "operationId": "DraftSupplyCreate",
+        "deprecated": false
+      }
+    },
+    "/v2/draft/supply/create/status": {
+      "post": {
+        "operationId": "DraftSupplyCreateStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbo/seller/list": {
+      "post": {
+        "operationId": "WarehouseFboSellerList",
+        "deprecated": false
+      }
+    },
+    "/v4/posting/fbs/ship": {
+      "post": {
+        "operationId": "PostingAPI_ShipFbsPostingV4",
+        "deprecated": false
+      }
+    },
+    "/v4/posting/fbs/ship/package": {
+      "post": {
+        "operationId": "PostingAPI_ShipFbsPostingPackage",
+        "deprecated": false
+      }
+    },
+    "/v6/fbs/posting/product/exemplar/set": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingProductExemplarSetV6",
+        "deprecated": false
+      }
+    },
+    "/v6/fbs/posting/product/exemplar/create-or-get": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingProductExemplarCreateOrGetV6",
+        "deprecated": false
+      }
+    },
+    "/v5/fbs/posting/product/exemplar/status": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingProductExemplarStatusV5",
+        "deprecated": false
+      }
+    },
+    "/v5/fbs/posting/product/exemplar/validate": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingProductExemplarValidateV5",
+        "deprecated": false
+      }
+    },
+    "/v1/fbs/posting/product/exemplar/update": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingProductExemplarUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/create": {
+      "post": {
+        "operationId": "CarriageAPI_CarriageCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/approve": {
+      "post": {
+        "operationId": "CarriageAPI_CarriageApprove",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/set-postings": {
+      "post": {
+        "operationId": "CarriageAPI_SetPostings",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/cancel": {
+      "post": {
+        "operationId": "CarriageAPI_CarriageCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/delivery/list": {
+      "post": {
+        "operationId": "CarriageAPI_CarriageDeliveryList",
+        "deprecated": false
+      }
+    },
+    "/v2/carriage/delivery/list": {
+      "post": {
+        "operationId": "CarriageAPI_CarriageDeliveryListV2",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/act/create": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSActCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/carriage-available/list": {
+      "post": {
+        "operationId": "PostingAPI_GetCarriageAvailableList",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/get": {
+      "post": {
+        "operationId": "CarriageGet",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/courier-contact/set": {
+      "post": {
+        "operationId": "CarriageCourierContactSet",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/courier-contact/get": {
+      "post": {
+        "operationId": "CarriageCourierContactGet",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/split": {
+      "post": {
+        "operationId": "FbsSplit",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/act/get-postings": {
+      "post": {
+        "operationId": "PostingAPI_ActPostingList",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/act/get-container-labels": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSActGetContainerLabels",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/act/get-barcode": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSGetBarcode",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/act/get-barcode/text": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSGetBarcodeText",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/digital/act/check-status": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSDigitalActCheckStatus",
+        "deprecated": true
+      }
+    },
+    "/v2/posting/fbs/act/get-pdf": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSGetAct",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/act-discrepancy/pdf": {
+      "post": {
+        "operationId": "CarriageActDiscrepancyPDF",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/act/list": {
+      "post": {
+        "operationId": "PostingAPI_FbsActList",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/digital/act/get-pdf": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSGetDigitalAct",
+        "deprecated": true
+      }
+    },
+    "/v2/posting/fbs/act/check-status": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSActCheckStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/traceable/split": {
+      "post": {
+        "operationId": "PostingFbsTraceableSplit",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/product/traceable/attribute": {
+      "post": {
+        "operationId": "PostingFbsProductTraceableAttribute",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/ettn/status": {
+      "post": {
+        "operationId": "CarriageEttnStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/assembly/carriage/posting/list": {
+      "post": {
+        "operationId": "AssemblyCarriagePostingList",
+        "deprecated": false
+      }
+    },
+    "/v1/assembly/carriage/product/list": {
+      "post": {
+        "operationId": "AssemblyCarriageProductList",
+        "deprecated": false
+      }
+    },
+    "/v1/assembly/fbs/posting/list": {
+      "post": {
+        "operationId": "AssemblyFbsPostingList",
+        "deprecated": false
+      }
+    },
+    "/v1/assembly/fbs/product/list": {
+      "post": {
+        "operationId": "AssemblyFbsProductList",
+        "deprecated": false
+      }
+    },
+    "/v2/fbs/posting/tracking-number/set": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingTrackingNumberSet",
+        "deprecated": false
+      }
+    },
+    "/v2/fbs/posting/delivering": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingDelivering",
+        "deprecated": false
+      }
+    },
+    "/v2/fbs/posting/last-mile": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingLastMile",
+        "deprecated": false
+      }
+    },
+    "/v2/fbs/posting/delivered": {
+      "post": {
+        "operationId": "PostingAPI_FbsPostingDelivered",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/timeslot/change-restrictions": {
+      "post": {
+        "operationId": "PostingAPI_PostingTimeslotChangeRestrictions",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/timeslot/set": {
+      "post": {
+        "operationId": "PostingAPI_SetPostingTimeslot",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/cutoff/set": {
+      "post": {
+        "operationId": "PostingAPI_SetPostingCutoff",
+        "deprecated": false
+      }
+    },
+    "/v3/posting/fbs/unfulfilled/list": {
+      "post": {
+        "operationId": "PostingAPI_GetFbsPostingUnfulfilledList",
+        "deprecated": true
+      }
+    },
+    "/v4/posting/fbs/unfulfilled/list": {
+      "post": {
+        "operationId": "PostingFbsUnfulfilledList",
+        "deprecated": false
+      }
+    },
+    "/v3/posting/fbs/list": {
+      "post": {
+        "operationId": "PostingAPI_GetFbsPostingListV3",
+        "deprecated": true
+      }
+    },
+    "/v4/posting/fbs/list": {
+      "post": {
+        "operationId": "PostingFbsList",
+        "deprecated": false
+      }
+    },
+    "/v3/posting/fbs/get": {
+      "post": {
+        "operationId": "PostingAPI_GetFbsPostingV3",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/get-by-barcode": {
+      "post": {
+        "operationId": "PostingAPI_GetFbsPostingByBarcode",
+        "deprecated": false
+      }
+    },
+    "/v3/posting/multiboxqty/set": {
+      "post": {
+        "operationId": "PostingAPI_PostingMultiBoxQtySetV3",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/product/country/list": {
+      "post": {
+        "operationId": "PostingAPI_ListCountryProductFbsPostingV2",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/product/country/set": {
+      "post": {
+        "operationId": "PostingAPI_SetCountryProductFbsPostingV2",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/restrictions": {
+      "post": {
+        "operationId": "PostingAPI_GetRestrictions",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/package-label": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSPackageLabel",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/package-label/create": {
+      "post": {
+        "operationId": "PostingAPI_CreateLabelBatch",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/package-label/create": {
+      "post": {
+        "operationId": "PostingAPI_CreateLabelBatchV2",
+        "deprecated": false
+      }
+    },
+    "/v3/posting/fbs/package-label/create": {
+      "post": {
+        "operationId": "PostingFbsPackageLabelCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/package-label/get": {
+      "post": {
+        "operationId": "PostingAPI_GetLabelBatch",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/package-label/get": {
+      "post": {
+        "operationId": "PostingFbsPackageLabelGet",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/cancel-reason": {
+      "post": {
+        "operationId": "PostingAPI_GetPostingFbsCancelReasonV1",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/cancel-reason/list": {
+      "post": {
+        "operationId": "PostingAPI_GetPostingFbsCancelReasonList",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/product/cancel": {
+      "post": {
+        "operationId": "PostingAPI_CancelFbsPostingProduct",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/cancel": {
+      "post": {
+        "operationId": "PostingAPI_CancelFbsPosting",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/arbitration": {
+      "post": {
+        "operationId": "PostingAPI_MoveFbsPostingToArbitration",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/fbs/awaiting-delivery": {
+      "post": {
+        "operationId": "PostingAPI_MoveFbsPostingToAwaitingDelivery",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbs/pick-up-code/verify": {
+      "post": {
+        "operationId": "PostingAPI_PostingFBSPickupCodeVerify",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/global/etgb": {
+      "post": {
+        "operationId": "PostingAPI_GetEtgb",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/unpaid-legal/product/list": {
+      "post": {
+        "operationId": "PostingAPI_UnpaidLegalProductList",
+        "deprecated": false
+      }
+    },
+    "/v1/product/info/stocks-by-warehouse/fbo": {
+      "post": {
+        "operationId": "GetProductInfoStocksByWarehouseFbo",
+        "deprecated": false
+      }
+    },
+    "/v2/returns/rfbs/list": {
+      "post": {
+        "operationId": "RFBSReturnsAPI_ReturnsRfbsListV2",
+        "deprecated": false
+      }
+    },
+    "/v2/returns/rfbs/get": {
+      "post": {
+        "operationId": "RFBSReturnsAPI_ReturnsRfbsGetV2",
+        "deprecated": false
+      }
+    },
+    "/v1/returns/rfbs/action/set": {
+      "post": {
+        "operationId": "ReturnsAPI_ReturnsRfbsActionSet",
+        "deprecated": false
+      }
+    },
+    "/v2/conditional-cancellation/list": {
+      "post": {
+        "operationId": "CancellationAPI_GetConditionalCancellationListV2",
+        "deprecated": false
+      }
+    },
+    "/v2/conditional-cancellation/approve": {
+      "post": {
+        "operationId": "CancellationAPI_ConditionalCancellationApproveV2",
+        "deprecated": false
+      }
+    },
+    "/v2/conditional-cancellation/reject": {
+      "post": {
+        "operationId": "CancellationAPI_ConditionalCancellationRejectV2",
+        "deprecated": false
+      }
+    },
+    "/v1/returns/list": {
+      "post": {
+        "operationId": "returnsList",
+        "deprecated": false
+      }
+    },
+    "/v1/returns/company/fbs/info": {
+      "post": {
+        "operationId": "returnsCompanyFBSInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/returns/settings/utilization/history": {
+      "post": {
+        "operationId": "UtilizationHistory",
+        "deprecated": false
+      }
+    },
+    "/v1/returns/settings/utilization/info": {
+      "post": {
+        "operationId": "UtilizationInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/returns/settings/utilization/update": {
+      "post": {
+        "operationId": "UtilizationUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/is-enabled": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutIsEnabled",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/list": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutList",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/info": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/barcode": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutGetBarcode",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/get-pdf": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutGetPDF",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/get-png": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutGetPNG",
+        "deprecated": false
+      }
+    },
+    "/v1/return/giveout/barcode-reset": {
+      "post": {
+        "operationId": "ReturnAPI_GiveoutBarcodeReset",
+        "deprecated": false
+      }
+    },
+    "/v1/chat/send/file": {
+      "post": {
+        "operationId": "ChatAPI_ChatSendFile",
+        "deprecated": false
+      }
+    },
+    "/v3/chat/list": {
+      "post": {
+        "operationId": "ChatAPI_ChatListV3",
+        "deprecated": false
+      }
+    },
+    "/v3/chat/history": {
+      "post": {
+        "operationId": "ChatAPI_ChatHistoryV3",
+        "deprecated": false
+      }
+    },
+    "/v2/invoice/create-or-update": {
+      "post": {
+        "operationId": "InvoiceAPI_InvoiceCreateOrUpdateV2",
+        "deprecated": false
+      }
+    },
+    "/v1/invoice/file/upload": {
+      "post": {
+        "operationId": "invoice_upload",
+        "deprecated": false
+      }
+    },
+    "/v2/invoice/get": {
+      "post": {
+        "operationId": "invoice_getV2",
+        "deprecated": false
+      }
+    },
+    "/v1/invoice/delete": {
+      "post": {
+        "operationId": "invoice_delete",
+        "deprecated": false
+      }
+    },
+    "/v1/report/info": {
+      "post": {
+        "operationId": "ReportAPI_ReportInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/report/list": {
+      "post": {
+        "operationId": "ReportAPI_ReportList",
+        "deprecated": false
+      }
+    },
+    "/v1/report/products/create": {
+      "post": {
+        "operationId": "ReportAPI_CreateCompanyProductsReport",
+        "deprecated": false
+      }
+    },
+    "/v2/report/returns/create": {
+      "post": {
+        "operationId": "ReportAPI_ReportReturnsCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/report/postings/create": {
+      "post": {
+        "operationId": "ReportAPI_CreateCompanyPostingsReport",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/cash-flow-statement/list": {
+      "post": {
+        "operationId": "FinanceAPI_FinanceCashFlowStatementList",
+        "deprecated": false
+      }
+    },
+    "/v1/report/discounted/create": {
+      "post": {
+        "operationId": "ReportAPI_CreateDiscountedReport",
+        "deprecated": false
+      }
+    },
+    "/v1/report/warehouse/stock": {
+      "post": {
+        "operationId": "ReportAPI_CreateStockByWarehouseReport",
+        "deprecated": false
+      }
+    },
+    "/v1/report/placement/by-products/create": {
+      "post": {
+        "operationId": "CreatePlacementByProductsReport",
+        "deprecated": false
+      }
+    },
+    "/v1/report/placement/by-supplies/create": {
+      "post": {
+        "operationId": "CreatePlacementBySuppliesReport",
+        "deprecated": false
+      }
+    },
+    "/v1/report/marked-products-sales/create": {
+      "post": {
+        "operationId": "CreateCompanyMarkedProductsSalesReport",
+        "deprecated": false
+      }
+    },
+    "/v2/analytics/stock_on_warehouses": {
+      "post": {
+        "operationId": "AnalyticsAPI_AnalyticsGetStockOnWarehousesV2",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/turnover/stocks": {
+      "post": {
+        "operationId": "AnalyticsAPI_StocksTurnover",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/stocks": {
+      "post": {
+        "operationId": "AnalyticsAPI_AnalyticsStocks",
+        "deprecated": false
+      }
+    },
+    "/v2/finance/realization": {
+      "post": {
+        "operationId": "FinanceAPI_GetRealizationReportV2",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/realization/posting": {
+      "post": {
+        "operationId": "FinanceAPI_GetRealizationReportV1",
+        "deprecated": false
+      }
+    },
+    "/v3/finance/transaction/list": {
+      "post": {
+        "operationId": "FinanceAPI_FinanceTransactionListV3",
+        "deprecated": false
+      }
+    },
+    "/v3/finance/transaction/totals": {
+      "post": {
+        "operationId": "FinanceAPI_FinanceTransactionTotalV3",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/document-b2b-sales": {
+      "post": {
+        "operationId": "ReportAPI_CreateDocumentB2BSalesReport",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/document-b2b-sales/json": {
+      "post": {
+        "operationId": "ReportAPI_CreateDocumentB2BSalesJSONReport",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/mutual-settlement": {
+      "post": {
+        "operationId": "ReportAPI_CreateMutualSettlementReport",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/products/buyout": {
+      "post": {
+        "operationId": "GetFinanceProductsBuyout",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/compensation": {
+      "post": {
+        "operationId": "ReportAPI_GetCompensationReport",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/decompensation": {
+      "post": {
+        "operationId": "ReportAPI_GetDecompensationReport",
+        "deprecated": false
+      }
+    },
+    "/v1/receipts/get": {
+      "post": {
+        "operationId": "GetReceipt",
+        "deprecated": false
+      }
+    },
+    "/v1/receipts/seller/list": {
+      "post": {
+        "operationId": "ReceiptsSellerList",
+        "deprecated": false
+      }
+    },
+    "/v1/receipts/upload": {
+      "post": {
+        "operationId": "UploadReceipt",
+        "deprecated": false
+      }
+    },
+    "/v1/rating/summary": {
+      "post": {
+        "operationId": "RatingAPI_RatingSummaryV1",
+        "deprecated": false
+      }
+    },
+    "/v1/rating/history": {
+      "post": {
+        "operationId": "RatingAPI_RatingHistoryV1",
+        "deprecated": false
+      }
+    },
+    "/v1/rating/index/fbs/info": {
+      "post": {
+        "operationId": "RatingAPI_GetFBSRatingIndexInfoV1",
+        "deprecated": false
+      }
+    },
+    "/v1/rating/index/fbs/posting/list": {
+      "post": {
+        "operationId": "RatingAPI_ListFBSRatingIndexPostingsV1",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/digital/codes/upload": {
+      "post": {
+        "operationId": "UploadPostingCodes",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/digital/list": {
+      "post": {
+        "operationId": "ListPostingCodes",
+        "deprecated": true
+      }
+    },
+    "/v1/product/digital/stocks/import": {
+      "post": {
+        "operationId": "DigitalProductAPI_StocksImport",
+        "deprecated": false
+      }
+    },
+    "/v1/review/comment/create": {
+      "post": {
+        "operationId": "ReviewAPI_CommentCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/review/comment/delete": {
+      "post": {
+        "operationId": "ReviewAPI_CommentDelete",
+        "deprecated": true
+      }
+    },
+    "/v2/review/comment/delete": {
+      "post": {
+        "operationId": "ReviewCommentDeleteV2",
+        "deprecated": false
+      }
+    },
+    "/v1/review/comment/list": {
+      "post": {
+        "operationId": "ReviewAPI_CommentList",
+        "deprecated": false
+      }
+    },
+    "/v1/review/change-status": {
+      "post": {
+        "operationId": "ReviewAPI_ReviewChangeStatus",
+        "deprecated": true
+      }
+    },
+    "/v2/review/change-status": {
+      "post": {
+        "operationId": "ReviewChangeStatusV2",
+        "deprecated": false
+      }
+    },
+    "/v1/review/count": {
+      "post": {
+        "operationId": "ReviewAPI_ReviewCount",
+        "deprecated": true
+      }
+    },
+    "/v2/review/count": {
+      "post": {
+        "operationId": "ReviewCountV2",
+        "deprecated": false
+      }
+    },
+    "/v1/review/info": {
+      "post": {
+        "operationId": "ReviewAPI_ReviewInfo",
+        "deprecated": true
+      }
+    },
+    "/v2/review/info": {
+      "post": {
+        "operationId": "ReviewInfoV2",
+        "deprecated": false
+      }
+    },
+    "/v1/review/list": {
+      "post": {
+        "operationId": "ReviewAPI_ReviewList",
+        "deprecated": true
+      }
+    },
+    "/v2/review/list": {
+      "post": {
+        "operationId": "ReviewListV2",
+        "deprecated": false
+      }
+    },
+    "/v1/question/answer/create": {
+      "post": {
+        "operationId": "QuestionAnswer_Create",
+        "deprecated": false
+      }
+    },
+    "/v1/question/answer/delete": {
+      "post": {
+        "operationId": "QuestionAnswer_Delete",
+        "deprecated": false
+      }
+    },
+    "/v1/question/answer/list": {
+      "post": {
+        "operationId": "QuestionAnswer_List",
+        "deprecated": false
+      }
+    },
+    "/v1/question/change-status": {
+      "post": {
+        "operationId": "Question_ChangeStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/question/count": {
+      "post": {
+        "operationId": "Question_Count",
+        "deprecated": false
+      }
+    },
+    "/v1/question/info": {
+      "post": {
+        "operationId": "Question_Info",
+        "deprecated": false
+      }
+    },
+    "/v1/question/list": {
+      "post": {
+        "operationId": "Question_List",
+        "deprecated": false
+      }
+    },
+    "/v1/question/top-sku": {
+      "post": {
+        "operationId": "Question_TopSku",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/manage/stocks": {
+      "post": {
+        "operationId": "AnalyticsAPI_ManageStocks",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/decommissioned-goods": {
+      "post": {
+        "operationId": "AnalyticsDecommissionedGoods",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/category/comparison": {
+      "post": {
+        "operationId": "AnalyticsCategoryComparison",
+        "deprecated": false
+      }
+    },
+    "/v1/removal/from-supply/list": {
+      "post": {
+        "operationId": "GetSupplyReturnsSummaryReport",
+        "deprecated": false
+      }
+    },
+    "/v1/removal/from-stock/list": {
+      "post": {
+        "operationId": "GetSupplierReturnsSummaryReport",
+        "deprecated": false
+      }
+    },
+    "/v1/product/stairway-discount/by-quantity/set": {
+      "post": {
+        "operationId": "ProductAPI_SetProductStairwayDiscountByQuantity",
+        "deprecated": false
+      }
+    },
+    "/v1/product/stairway-discount/by-quantity/get": {
+      "post": {
+        "operationId": "ProductAPI_GetProductStairwayDiscountByQuantity",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/balance": {
+      "post": {
+        "operationId": "GetFinanceBalanceV1",
+        "deprecated": false
+      }
+    },
+    "/v2/actions/discounts-task/list": {
+      "post": {
+        "operationId": "GetDiscountTaskListV2",
+        "deprecated": false
+      }
+    },
+    "/v1/product/visibility/set": {
+      "post": {
+        "operationId": "ProductVisibilitySet",
+        "deprecated": false
+      }
+    },
+    "/v2/posting/digital/list": {
+      "post": {
+        "operationId": "PostingDigitalList",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/accrual/postings": {
+      "post": {
+        "operationId": "GetFinanceAccrualPostings",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/accrual/types": {
+      "post": {
+        "operationId": "GetFinanceAccrualTypes",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/accrual/by-day": {
+      "post": {
+        "operationId": "GetFinanceAccrualByDay",
+        "deprecated": false
+      }
+    },
+    "/v1/product/visibility/info": {
+      "post": {
+        "operationId": "ProductVisibilityInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbp/get": {
+      "post": {
+        "operationId": "GetFbpPosting",
+        "deprecated": false
+      }
+    },
+    "/v1/report/realization/posting/create": {
+      "post": {
+        "operationId": "CreateCompanyFinanceRealizationPostingReport",
+        "deprecated": false
+      }
+    },
+    "/v2/product/certification/options": {
+      "post": {
+        "operationId": "ProductCertificateOptions",
+        "deprecated": false
+      }
+    },
+    "/v2/product/certification/params": {
+      "post": {
+        "operationId": "ProductCertificateParams",
+        "deprecated": false
+      }
+    },
+    "/v2/product/certificate/create": {
+      "post": {
+        "operationId": "ProductCertificateCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/description-category/dependent-attributes": {
+      "post": {
+        "operationId": "DescriptionCategoryDependentAttributes",
+        "deprecated": false
+      }
+    },
+    "/v1/description-category/dependent-attributes/values": {
+      "post": {
+        "operationId": "DescriptionCategoryDependentAttributesValues",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/local-sale/total": {
+      "post": {
+        "operationId": "AnalyticsLocalSaleTotal",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/local-sale/clusters-items/info": {
+      "post": {
+        "operationId": "AnalyticsLocalSaleClustersItemsInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/local-sale/items-clusters/info": {
+      "post": {
+        "operationId": "AnalyticsLocalSaleItemsClustersInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/rfbs/return-point/list": {
+      "post": {
+        "operationId": "WarehouseRfbsReturnPointList",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/act/summary/get": {
+      "post": {
+        "operationId": "SupplyOrderActSummaryGet",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/act/product/get": {
+      "post": {
+        "operationId": "SupplyOrderActProductGet",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/act/accept": {
+      "post": {
+        "operationId": "SupplyOrderActAccept",
+        "deprecated": false
+      }
+    },
+    "/v1/supply-order/act/accept/status": {
+      "post": {
+        "operationId": "SupplyOrderActAcceptStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/create/drop-off/list": {
+      "post": {
+        "operationId": "WarehouseAPI_ListDropOffPointsForCreateFBSWarehouse",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/update/drop-off/list": {
+      "post": {
+        "operationId": "WarehouseAPI_ListDropOffPointsForUpdateFBSWarehouse",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/create/drop-off/timeslot/list": {
+      "post": {
+        "operationId": "WarehouseFbsCreateDropOffTimeslotList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/update/drop-off/timeslot/list": {
+      "post": {
+        "operationId": "WarehouseFbsUpdateDropOffTimeslotList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/create/pick-up/timeslot/list": {
+      "post": {
+        "operationId": "WarehouseFbsCreatePickUpTimeslotList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/update/pick-up/timeslot/list": {
+      "post": {
+        "operationId": "WarehouseFbsUpdatePickUpTimeslotList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/create": {
+      "post": {
+        "operationId": "WarehouseAPI_CreateWarehouseFBS",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/update": {
+      "post": {
+        "operationId": "UpdateWarehouseFBS",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/first-mile/update": {
+      "post": {
+        "operationId": "UpdateWarehouseFBSFirstMile",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/create/return-point/list": {
+      "post": {
+        "operationId": "WarehouseFBSCreateReturnPointList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/update/return-point/list": {
+      "post": {
+        "operationId": "WarehouseFBSUpdateReturnPointList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/return-mile/info": {
+      "post": {
+        "operationId": "WarehouseFBSReturnMileInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/return-mile/check": {
+      "post": {
+        "operationId": "WarehouseFbsReturnMileCheck",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/pickup/courier/create": {
+      "post": {
+        "operationId": "WarehouseFbsPickUpCourierCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/pickup/courier/cancel": {
+      "post": {
+        "operationId": "WarehouseFbsPickUpCourierCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/pickup/history/list": {
+      "post": {
+        "operationId": "WarehouseFbsPickUpHistoryList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/fbs/pickup/planning/list": {
+      "post": {
+        "operationId": "WarehouseFbsPickUpPlanningList",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/erfbs/aggregator/create": {
+      "post": {
+        "operationId": "WarehouseERFBSAggregatorCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/erfbs/update": {
+      "post": {
+        "operationId": "WarehouseERFBSUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/erfbs/aggregator/delivery-method/update": {
+      "post": {
+        "operationId": "WarehouseERFBSAggregatorDeliveryMethodUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/erfbs/non-integrated/create": {
+      "post": {
+        "operationId": "WarehouseERFBSNonIntegratedCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/erfbs/non-integrated/delivery-method/update": {
+      "post": {
+        "operationId": "WarehouseERFBSNonIntegratedDeliveryMethodUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/rfbs/pause": {
+      "post": {
+        "operationId": "WarehouseRfbsPause",
+        "deprecated": false
+      }
+    },
+    "/v1/warehouse/rfbs/unpause": {
+      "post": {
+        "operationId": "WarehouseRfbsUnpause",
+        "deprecated": false
+      }
+    },
+    "/v2/polygon/bind": {
+      "post": {
+        "operationId": "PolygonBind",
+        "deprecated": false
+      }
+    },
+    "/v1/polygon/delete": {
+      "post": {
+        "operationId": "PolygonDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/polygon/list": {
+      "post": {
+        "operationId": "PolygonList",
+        "deprecated": false
+      }
+    },
+    "/v1/polygon/time/coordinates/update": {
+      "post": {
+        "operationId": "PolygonTimeCoordinatesUpdate",
+        "deprecated": false
+      }
+    },
+    "/v1/polygon/time/set": {
+      "post": {
+        "operationId": "PolygonTimeSet",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/create/discount": {
+      "post": {
+        "operationId": "SellerActionsCreateDiscount",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/create/discount-with-condition": {
+      "post": {
+        "operationId": "SellerActionsCreateDiscountWithCondition",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/create/installment": {
+      "post": {
+        "operationId": "SellerActionsCreateInstallment",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/create/multi-level-discount": {
+      "post": {
+        "operationId": "SellerActionsCreateMultiLevelDiscount",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/create/voucher": {
+      "post": {
+        "operationId": "SellerActionsCreateVoucher",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/update/discount": {
+      "post": {
+        "operationId": "SellerActionsUpdateDiscount",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/update/discount-with-condition": {
+      "post": {
+        "operationId": "SellerActionsUpdateDiscountWithCondition",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/update/installment": {
+      "post": {
+        "operationId": "SellerActionsUpdateInstallment",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/update/multi-level-discount": {
+      "post": {
+        "operationId": "SellerActionsUpdateMultiLevelDiscount",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/update/voucher": {
+      "post": {
+        "operationId": "SellerActionsUpdateVoucher",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/products/add": {
+      "post": {
+        "operationId": "SellerActionsProductsAdd",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/products/candidates": {
+      "post": {
+        "operationId": "SellerActionsProductsCandidates",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/products/delete": {
+      "post": {
+        "operationId": "SellerActionsProductsDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/products/list": {
+      "post": {
+        "operationId": "SellerActionsProductsList",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/archive": {
+      "post": {
+        "operationId": "SellerActionsArchive",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/change-activity": {
+      "post": {
+        "operationId": "SellerActionsChangeActivity",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/list": {
+      "post": {
+        "operationId": "SellerActionsList",
+        "deprecated": false
+      }
+    },
+    "/v1/seller-actions/voucher/get": {
+      "post": {
+        "operationId": "SellerActionsVoucherGet",
+        "deprecated": false
+      }
+    },
+    "/v1/actions/auto-add/products/list": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsList",
+        "deprecated": true
+      }
+    },
+    "/v1/actions/auto-add/products/candidates": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsCandidates",
+        "deprecated": true
+      }
+    },
+    "/v1/actions/auto-add/products/delete": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsDelete",
+        "deprecated": true
+      }
+    },
+    "/v1/actions/auto-add/products/update": {
+      "post": {
+        "operationId": "ActionsAutoAddProductsUpdate",
+        "deprecated": true
+      }
+    },
+    "/v1/notification/set": {
+      "post": {
+        "operationId": "SetNotification",
+        "deprecated": false
+      }
+    },
+    "/v1/notification/update": {
+      "post": {
+        "operationId": "UpdateNotification",
+        "deprecated": false
+      }
+    },
+    "/v1/notification/delete": {
+      "post": {
+        "operationId": "DeleteNotification",
+        "deprecated": false
+      }
+    },
+    "/v1/notification/check": {
+      "post": {
+        "operationId": "CheckNotification",
+        "deprecated": false
+      }
+    },
+    "/v1/notification/enable": {
+      "post": {
+        "operationId": "EnableNotification",
+        "deprecated": false
+      }
+    },
+    "/v1/notification/list": {
+      "post": {
+        "operationId": "NotificationList",
+        "deprecated": false
+      }
+    },
+    "/v1/notification/push-type/list": {
+      "post": {
+        "operationId": "GetNotificationPushTypeList",
+        "deprecated": false
+      }
+    },
+    "/v2/cargoes/get": {
+      "post": {
+        "operationId": "CargoesGetV2",
+        "deprecated": false
+      }
+    },
+    "/v2/cargoes/delete": {
+      "post": {
+        "operationId": "CargoesDeleteV2",
+        "deprecated": false
+      }
+    },
+    "/v2/cargoes/delete/status": {
+      "post": {
+        "operationId": "CargoesDeleteStatusV2",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/transport/activate": {
+      "post": {
+        "operationId": "CargoesTransportActivate",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/transport/activate/status": {
+      "post": {
+        "operationId": "CargoesTransportActivateStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/transport/create": {
+      "post": {
+        "operationId": "CargoesTransportCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/transport/create/status": {
+      "post": {
+        "operationId": "CargoesTransportCreateStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/transport/bind": {
+      "post": {
+        "operationId": "CargoesTransportBind",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/transport/bind/status": {
+      "post": {
+        "operationId": "CargoesTransportBindStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/supplies/get": {
+      "post": {
+        "operationId": "CargoesSuppliesGet",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/label/transport-by-order/create": {
+      "post": {
+        "operationId": "CargoesLabelTransportByOrderCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/label/transport-by-order/status": {
+      "post": {
+        "operationId": "CargoesLabelTransportByOrderStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/label/transport/create": {
+      "post": {
+        "operationId": "CargoesLabelTransportCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/cargoes/label/transport/status": {
+      "post": {
+        "operationId": "CargoesLabelTransportStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/seller-dlv/create": {
+      "post": {
+        "operationId": "FbpDraftDirectSellerDlvCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/seller-dlv/edit": {
+      "post": {
+        "operationId": "FbpDraftDirectSellerDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/timeslot/edit": {
+      "post": {
+        "operationId": "FbpDraftDirectTimeslotEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/timeslot/get": {
+      "post": {
+        "operationId": "FbpDraftDirectGetTimeslot",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/create": {
+      "post": {
+        "operationId": "FbpDraftDirectCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/delete": {
+      "post": {
+        "operationId": "FbpDraftDirectDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/product/validate": {
+      "post": {
+        "operationId": "FbpDraftDirectProductValidate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/registrate": {
+      "post": {
+        "operationId": "FbpDraftDirectRegistrate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/create": {
+      "post": {
+        "operationId": "FbpDraftDropOffCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/delete": {
+      "post": {
+        "operationId": "FbpDraftDropOffDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/dlv/edit": {
+      "post": {
+        "operationId": "FbpDraftDropOffDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/registrate": {
+      "post": {
+        "operationId": "FbpDraftDropOffRegistrate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/province/list": {
+      "post": {
+        "operationId": "FbpDraftDropOffProvinceList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/point/list": {
+      "post": {
+        "operationId": "FbpDraftDropOffPointList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/point/timetable": {
+      "post": {
+        "operationId": "FbpDraftDropOffPointTimetable",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/drop-off/product/validate": {
+      "post": {
+        "operationId": "FbpDraftDropOffProductValidate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/direct/cancel": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderDirectCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/direct/seller-dlv/edit": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderDirectSellerDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/direct/tpl-dlv/edit": {
+      "post": {
+        "operationId": "FbpOrderDirectTplDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/direct/timeslot/edit": {
+      "post": {
+        "operationId": "FbpAPI_FbpEditTimeslot",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/direct/timeslot/list": {
+      "post": {
+        "operationId": "FbpAPI_FbpAvailableTimeslotList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/act-from/create": {
+      "post": {
+        "operationId": "FbpAPI_FbpCreateAct",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/act-from/get": {
+      "post": {
+        "operationId": "FbpAPI_FbpCheckActState",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/act-to/create": {
+      "post": {
+        "operationId": "FbpAPI_FbpCreateConsignmentNote",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/act-to/get": {
+      "post": {
+        "operationId": "FbpAPI_FbpCheckConsignmentNoteState",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/archive/get": {
+      "post": {
+        "operationId": "FbpAPI_FbpArchiveGet",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/archive/list": {
+      "post": {
+        "operationId": "FbpAPI_FbpArchiveList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/label/create": {
+      "post": {
+        "operationId": "FbpAPI_FbpCreateLabel",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/label/get": {
+      "post": {
+        "operationId": "FbpAPI_FbpGetLabel",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/pick-up/create": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftPickupCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/pick-up/delete": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftPickUpDelete",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/pick-up/dlv/edit": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftPickupDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/pick-up/product/validate": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftPickUpProductValidate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/warehouse/list": {
+      "post": {
+        "operationId": "FbpWarehouseList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/pick-up/registrate": {
+      "post": {
+        "operationId": "FbpDraftPickUpRegistrate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/get": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftGet",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/list": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/tpl-dlv/create": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftDirectTplDlvCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/draft/direct/tpl-dlv/edit": {
+      "post": {
+        "operationId": "FbpAPI_FbpDraftDirectTplDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/drop-off/cancel": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderDropOffCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/drop-off/dlv/edit": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderDropOffDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/drop-off/timetable": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderDropOffTimetable",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/get": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderGet",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/list": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderList",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/fbp/list": {
+      "post": {
+        "operationId": "PostingFbpList",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/pick-up/cancel": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderPickUpCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/fbp/order/pick-up/dlv/edit": {
+      "post": {
+        "operationId": "FbpAPI_FbpOrderPickUpDlvEdit",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/create": {
+      "post": {
+        "operationId": "CarriageContainerCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/fill": {
+      "post": {
+        "operationId": "CarriageContainerFill",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/approve": {
+      "post": {
+        "operationId": "CarriageContainerApprove",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/place-into": {
+      "post": {
+        "operationId": "CarriageContainerPlaceInto",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/remove-postings": {
+      "post": {
+        "operationId": "CarriageContainerRemovePostings",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/remove-from": {
+      "post": {
+        "operationId": "CarriageContainerRemoveFrom",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/cancel": {
+      "post": {
+        "operationId": "CarriageContainerCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/list": {
+      "post": {
+        "operationId": "CarriageContainerList",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/get": {
+      "post": {
+        "operationId": "CarriageContainerGet",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/status/get": {
+      "post": {
+        "operationId": "CarriageContainerStatusGet",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/task/info": {
+      "post": {
+        "operationId": "CarriageContainerTaskInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/document/get": {
+      "post": {
+        "operationId": "CarriageContainerDocumentGet",
+        "deprecated": false
+      }
+    },
+    "/v1/carriage/container/label/get": {
+      "post": {
+        "operationId": "CarriageContainerLabelGet",
+        "deprecated": false
+      }
+    },
+    "/v1/chat/send/message": {
+      "post": {
+        "operationId": "ChatAPI_ChatSendMessage",
+        "deprecated": false
+      }
+    },
+    "/v1/chat/start": {
+      "post": {
+        "operationId": "ChatAPI_ChatStart",
+        "deprecated": false
+      }
+    },
+    "/v2/chat/read": {
+      "post": {
+        "operationId": "ChatAPI_ChatReadV2",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/data": {
+      "post": {
+        "operationId": "AnalyticsAPI_AnalyticsGetData",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/product-queries": {
+      "post": {
+        "operationId": "AnalyticsAPI_AnalyticsProductQueries",
+        "deprecated": false
+      }
+    },
+    "/v1/analytics/product-queries/details": {
+      "post": {
+        "operationId": "AnalyticsAPI_AnalyticsProductQueriesDetails",
+        "deprecated": false
+      }
+    },
+    "/v1/finance/realization/by-day": {
+      "post": {
+        "operationId": "FinanceAPI_GetRealizationByDayReportV1",
+        "deprecated": false
+      }
+    },
+    "/v1/search-queries/text": {
+      "post": {
+        "operationId": "SearchQueriesAPI_SearchQueriesText",
+        "deprecated": false
+      }
+    },
+    "/v1/search-queries/top": {
+      "post": {
+        "operationId": "SearchQueriesAPI_SearchQueriesTop",
+        "deprecated": false
+      }
+    },
+    "/v1/product/prices/details": {
+      "post": {
+        "operationId": "ProductPricesDetails",
+        "deprecated": false
+      }
+    },
+    "/v1/cancel-reason/list": {
+      "post": {
+        "operationId": "CancelReasonList",
+        "deprecated": false
+      }
+    },
+    "/v1/cancel-reason/list-by-order": {
+      "post": {
+        "operationId": "CancelReasonListByOrder",
+        "deprecated": false
+      }
+    },
+    "/v1/cancel-reason/list-by-posting": {
+      "post": {
+        "operationId": "CancelReasonAPI_CancelReasonListByPosting",
+        "deprecated": false
+      }
+    },
+    "/v1/delivery/check": {
+      "post": {
+        "operationId": "DeliveryCheck",
+        "deprecated": false
+      }
+    },
+    "/v2/delivery/checkout": {
+      "post": {
+        "operationId": "DeliveryCheckout",
+        "deprecated": false
+      }
+    },
+    "/v1/delivery/map": {
+      "post": {
+        "operationId": "DeliveryMap",
+        "deprecated": false
+      }
+    },
+    "/v1/delivery/point/info": {
+      "post": {
+        "operationId": "DeliveryPointInfo",
+        "deprecated": false
+      }
+    },
+    "/v1/delivery/point/list": {
+      "post": {
+        "operationId": "DeliveryAPI_DeliveryPointList",
+        "deprecated": false
+      }
+    },
+    "/v1/order/cancel": {
+      "post": {
+        "operationId": "OrderAPI_OrderCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/order/cancel/check": {
+      "post": {
+        "operationId": "OrderAPI_OrderCancelCheck",
+        "deprecated": false
+      }
+    },
+    "/v1/order/cancel/status": {
+      "post": {
+        "operationId": "OrderAPI_OrderCancelStatus",
+        "deprecated": false
+      }
+    },
+    "/v2/order/create": {
+      "post": {
+        "operationId": "OrderAPI_OrderCreate",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/cancel": {
+      "post": {
+        "operationId": "PostingAPI_PostingCancel",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/cancel/status": {
+      "post": {
+        "operationId": "PostingAPI_PostingCancelStatus",
+        "deprecated": false
+      }
+    },
+    "/v1/posting/marks": {
+      "post": {
+        "operationId": "PostingAPI_PostingMarks",
+        "deprecated": false
+      }
+    }
+  }
+}

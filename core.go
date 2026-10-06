@@ -11,6 +11,10 @@ import (
 )
 
 type CommonResponse struct {
+	// Headers contains the provider HTTP response headers, including rate limits.
+	// Retry-After uses seconds; Item-Retry-After uses minutes. Missing headers
+	// remain absent. The SDK does not schedule or retry requests automatically.
+	Headers    http.Header `json:"-"`
 	StatusCode int
 	Code       int                    `json:"code"`
 	Details    []CommonResponseDetail `json:"details"`
@@ -32,6 +36,7 @@ func (r Response) CopyCommonResponse(rhs *CommonResponse) {
 	rhs.Details = r.Details
 	rhs.StatusCode = r.StatusCode
 	rhs.Message = r.Message
+	rhs.Headers = r.Headers.Clone()
 }
 
 func getDefaultValues(v reflect.Value) error {
